@@ -104,8 +104,8 @@ def newPost():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO post (name,description,category,userid,clothingid) VALUES (%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["name"], data["description"], data["category"], data["userid"], data["clothingid"]))
+            sql = "INSERT INTO post (name,description,category,userid,eventid) VALUES (%s,%s,%s,%s,%s)"
+            cursor.execute(sql, (data["name"], data["description"], data["category"], data["userid"], data["eventid"]))
             print(sql)
             connection.commit()
     finally:
@@ -120,9 +120,9 @@ def updatePost():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "UPDATE post SET %s = %s WHERE clothingid = %s"
+            sql = "UPDATE post SET %s = %s WHERE eventid = %s"
 
-            cursor.execute(sql, (data["key"],data["value"],data["clothingid"]))
+            cursor.execute(sql, (data["key"],data["value"],data["eventid"]))
 
             connection.commit()
     finally:
