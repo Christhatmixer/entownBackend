@@ -63,8 +63,8 @@ def registerUser():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO users (userID, email, name,username,profileImageURL) VALUES (%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["userID"], data["email"],data["name"],data["username"],data["profileImageURL"]))
+            sql = "INSERT INTO users (userid, email, name,username,profileimageurl) VALUES (%s,%s,%s,%s,%s)"
+            cursor.execute(sql, (data["userid"], data["email"],data["name"],data["username"],data["profileimageurl"]))
 
             connection.commit()
     finally:
@@ -105,7 +105,7 @@ def newPost():
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO post (name,description,category,userid,clothingid) VALUES (%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["name"], data["description"], data["category"], data["userID"], data["clothingID"]))
+            cursor.execute(sql, (data["name"], data["description"], data["category"], data["userid"], data["clothingid"]))
             print(sql)
             connection.commit()
     finally:
@@ -122,7 +122,7 @@ def updatePost():
         with dict_cur as cursor:
             sql = "UPDATE post SET %s = %s WHERE clothingid = %s"
 
-            cursor.execute(sql, (data["key"],data["value"],data["clothingID"]))
+            cursor.execute(sql, (data["key"],data["value"],data["clothingid"]))
 
             connection.commit()
     finally:
