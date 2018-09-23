@@ -72,6 +72,24 @@ def registerUser():
 
     return "success"
 
+@app.route('/updateUser', methods=['GET', 'POST'])
+def registerUser():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    try:
+        with connection.cursor() as cursor:
+            for key,value in data:
+                
+                sql = "INSERT INTO users ({column}) VALUES (%s)".format(column=key)
+                cursor.execute(sql, (value,))
+
+                connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
+
 @app.route('/getUserInfo', methods=['GET', 'POST'])
 def getUserInfo():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
@@ -120,11 +138,13 @@ def updatePost():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "UPDATE post SET %s = %s WHERE eventid = %s"
+            for key in data:
 
-            cursor.execute(sql, (data["key"],data["value"],data["eventid"]))
+                sql = "UPDATE post SET %s = %s WHERE eventid = %s"
 
-            connection.commit()
+                cursor.execute(sql, (data["key"],data["value"],data["eventid"]))
+
+                connection.commit()
     finally:
         connection.close()
 
