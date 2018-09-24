@@ -79,10 +79,10 @@ def updateUser():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            for key,value in data:
+            for key in data:
 
                 sql = "INSERT INTO users ({column}) VALUES (%s)".format(column=key)
-                cursor.execute(sql, (value,))
+                cursor.execute(sql, (data[key],))
 
                 connection.commit()
     finally:
