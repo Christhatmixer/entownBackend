@@ -73,14 +73,14 @@ def registerUser():
     return "success"
 
 @app.route('/updateUser', methods=['GET', 'POST'])
-def registerUser():
+def updateUser():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
     data = request.json
     try:
         with connection.cursor() as cursor:
             for key,value in data:
-                
+
                 sql = "INSERT INTO users ({column}) VALUES (%s)".format(column=key)
                 cursor.execute(sql, (value,))
 
