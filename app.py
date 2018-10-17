@@ -7,7 +7,8 @@ import json
 import requests
 from urllib.parse import urlparse
 import os
-
+import geopy
+from geopy.distance import geodesic
 
 
 
@@ -56,6 +57,28 @@ def getUserPost():
         connection.close()
     return jsonify(result)
 
+# RETRIEVE LOCAL POPULAR EVENTS
+@app.route('/getStateEvents', methods=['GET', 'POST'])
+def getStateEvents():
+    data = request.json
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM events WHERE state = %s"
+
+
+            cursor.execute(sql, (data["state"], ))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
 @app.route('/registerUser', methods=['GET', 'POST'])
 def registerUser():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
@@ -81,7 +104,7 @@ def updateUser():
         with connection.cursor() as cursor:
             for key in data:
 
-                sql = "INSERT INTO users ({column}) VALUES (%s)".format(column=key)
+                sql = "UPDATE users ({column}) VALUES (%s)".format(column=key)
                 cursor.execute(sql, (data[key],))
 
                 connection.commit()
@@ -149,6 +172,7 @@ def updatePost():
         connection.close()
 
     return "success"
+
 
 
 # SEARCHING
