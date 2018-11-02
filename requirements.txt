@@ -12,3 +12,5 @@ requests == 2.18.4
 psycopg2 == 2.7.5
 
 gunicorn==19.7.1
+
+geopy == 1.17.0
