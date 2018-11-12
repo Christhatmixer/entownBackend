@@ -73,6 +73,12 @@ def getStateEvents():
 
             result = cursor.fetchall()
             print(result)
+            userLocation = (data["latitude"],data["longitude"])
+            for event in result:
+                eventLocation = (event["latitude"],event["longitude"])
+                dist = geopy.distance.vincenty(userLocation, eventLocation)
+                print(dist.miles)
+
 
             connection.commit()
     finally:
