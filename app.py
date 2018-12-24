@@ -179,6 +179,24 @@ def updatePost():
 
     return "success"
 
+@app.route('/saveEvent', methods=['GET', 'POST'])
+def updatePost():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+
+                sql = "INSERT INTO savedevents (userid, eventid) VALUES ('{userid}','{eventid}')".format(
+                    userid=data["userid"], eventid=data["eventid"])
+
+                cursor.execute(sql, data["userid"],data["eventid"])
+
+                connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
 
 
 # SEARCHING
