@@ -190,7 +190,7 @@ def saveEvent():
                 sql = "INSERT INTO savedevents (userid, eventid) VALUES ('{userid}','{eventid}')".format(
                     userid=data["userid"], eventid=data["eventid"])
 
-                cursor.execute(sql, data["userid"],data["eventid"])
+                cursor.execute(sql, (data["userid"], data["eventid"]))
 
                 connection.commit()
     finally:
