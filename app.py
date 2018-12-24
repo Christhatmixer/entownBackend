@@ -180,7 +180,7 @@ def updatePost():
     return "success"
 
 @app.route('/saveEvent', methods=['GET', 'POST'])
-def updatePost():
+def saveEvent():
     data = request.json
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
