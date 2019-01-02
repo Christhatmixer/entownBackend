@@ -64,7 +64,7 @@ def getSavedEvents():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM savedevents WHERE userID = %s"
+            sql = "SELECT * FROM savedevents INNER JOIN events ON savedevents.eventid = events.eventid WHERE savedevents.userid = %s"
             cursor.execute(sql, (data["userID"], ))
 
             result = cursor.fetchall()
