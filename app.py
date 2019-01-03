@@ -237,7 +237,7 @@ def getComments():
     return jsonify(result)
 
 @app.route('/postComment', methods=['GET', 'POST'])
-def getComments():
+def postComment():
     data = request.json
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
