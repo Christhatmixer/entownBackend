@@ -216,6 +216,42 @@ def saveEvent():
 
     return "success"
 
+# COMMENTS
+
+@app.route('/getComments', methods=['GET', 'POST'])
+def getComments():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM comments INNER JOIN users ON comments.userid = events.eventid WHERE eventid = %s"
+            cursor.execute(sql, (data["userID"], ))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
+@app.route('/postComment', methods=['GET', 'POST'])
+def getComments():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "INSERT INTO comments (text,userid,eventid) VALUES (%s,%s,%s)"
+            cursor.execute(sql, (data["text"],data["userid"], data["eventid"]))
+
+
+
+            connection.commit()
+    finally:
+        connection.close()
+    return "success"
 
 # SEARCHING
 @app.route('/searchUsers', methods=['GET', 'POST'])
