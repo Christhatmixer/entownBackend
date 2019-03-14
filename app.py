@@ -272,6 +272,41 @@ def searchUsers():
     return jsonify(result)
 
 
+# MESSAGING
+
+@app.route('/sendMessage', methods=['GET', 'POST'])
+def newPost():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    try:
+        with connection.cursor() as cursor:
+            sql = "INSERT INTO post (name,text,userid,receivingid) VALUES (%s,%s,%s,%s)"
+            cursor.execute(sql, (data["name"], data["text"], data["userid"], data["receivingid"]))
+            print(sql)
+            connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
+
+@app.route('/getMessages', methods=['GET', 'POST'])
+def getComments():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM messages INNER JOIN users ON comments.userid = events.eventid WHERE eventid = %s"
+            cursor.execute(sql, (data["userID"], ))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
 
 # RELATIONSHOP MANAGEMENT
 @app.route('/checkFollow', methods=['GET', 'POST'])
