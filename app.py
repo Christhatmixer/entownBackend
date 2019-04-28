@@ -110,8 +110,8 @@ def registerUser():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO users (userid, email, name,username,profileimageurl) VALUES (%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["userid"], data["email"],data["name"],data["username"],data["profileimageurl"]))
+            sql = "INSERT INTO users (userid, email, name,username) VALUES (%s,%s,%s,%s)"
+            cursor.execute(sql, (data["userid"], data["email"],data["name"],data["username"]))
 
             connection.commit()
     finally:
@@ -281,7 +281,7 @@ def newPost():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO post (name,text,userid,receivingid) VALUES (%s,%s,%s,%s)"
+            sql = "INSERT INTO messages (name,text,sendinguserid,receivingid) VALUES (%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["text"], data["userid"], data["receivingid"]))
             print(sql)
             connection.commit()
