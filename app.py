@@ -110,7 +110,7 @@ def registerUser():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO users (userid, email, name,username, radius) VALUES (%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO users (userid, email, name, username, radius) VALUES (%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["userid"], data["email"],data["name"],data["username"], data["radius"]))
 
             connection.commit()
@@ -275,7 +275,7 @@ def searchUsers():
 # MESSAGING
 
 @app.route('/sendMessage', methods=['GET', 'POST'])
-def newPost():
+def sendMessage():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
     data = request.json
@@ -291,7 +291,7 @@ def newPost():
     return "success"
 
 @app.route('/getMessages', methods=['GET', 'POST'])
-def getComments():
+def getMessages():
     data = request.json
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
