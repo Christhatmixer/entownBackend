@@ -29,7 +29,7 @@ def getFeedPost():
             sql = "SELECT * FROM post INNER JOIN followings ON post.userid = followings.followingid WHERE followings.userid = %s"
 
 
-            cursor.execute(sql, (data["userID"], ))
+            cursor.execute(sql, (data["userid"], ))
 
             result = cursor.fetchall()
             print(result)
