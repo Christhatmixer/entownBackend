@@ -65,7 +65,7 @@ def getSavedEvents():
     try:
         with dict_cur as cursor:
             sql = "SELECT * FROM savedevents INNER JOIN events ON savedevents.eventid = events.eventid WHERE savedevents.userid = %s"
-            cursor.execute(sql, (data["userID"], ))
+            cursor.execute(sql, (data["userid"], ))
 
             result = cursor.fetchall()
             print(result)
@@ -162,14 +162,14 @@ def getUserInfo():
 
 # EDIT AND ADD POST
 
-@app.route('/newPost', methods=['GET', 'POST'])
-def newPost():
+@app.route('/newEvent', methods=['GET', 'POST'])
+def newEvent():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO post (name,description,category,userid,eventid) VALUES (%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO events (name,description,category,userid,eventid) VALUES (%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["category"], data["userid"], data["eventid"]))
             print(sql)
             connection.commit()
