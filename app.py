@@ -173,7 +173,7 @@ def newEvent():
             cursor.executemany(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],data["datenum"],data["endtime"],
                                  data["latitude"],data["longitude"],data["address"],
                                  data["photos"]))
-            print(sql)
+            print(cursor)
             connection.commit()
     finally:
         connection.close()
