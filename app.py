@@ -170,7 +170,7 @@ def newEvent():
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO events (name,description,company,userid,eventid,datenum,endtime,latitude,longitude,address,photos) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],data["datenum"],data["endtime"],
+            cursor.executemany(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],data["datenum"],data["endtime"],
                                  data["latitude"],data["longitude"],data["address"],
                                  data["photos"]))
             print(sql)
