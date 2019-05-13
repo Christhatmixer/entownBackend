@@ -169,8 +169,9 @@ def newEvent():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO events (name,description,category,userid,eventid) VALUES (%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["name"], data["description"], data["category"], data["userid"], data["eventid"]))
+            sql = "INSERT INTO events (name,description,company,userid,eventid,datenum,endtime,lat,long,address) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],data["datenum"],data["endtime"],
+                                 data["lat"],data["long"],data["address"]))
             print(sql)
             connection.commit()
     finally:
