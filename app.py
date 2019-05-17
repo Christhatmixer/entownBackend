@@ -362,5 +362,24 @@ def unfollowUser():
         connection.close()
     return "success"
 
+@app.route('/getFollowersCount', methods=['GET', 'POST'])
+def unfollowUser():
+    data = request.json
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT COUNT(*) FROM followings WHERE followings.followingid = %s"
+            print(sql)
+            cursor.execute(sql, (data["userid"],))
+            result = cursor.fetchall()
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
+
 if __name__ == '__main__':
     app.run()
