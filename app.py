@@ -9,13 +9,29 @@ from urllib.parse import urlparse
 import os
 import geopy
 from geopy.distance import geodesic
-
+from math import radians, cos, sin, asin, sqrt
 
 
 
 
 app = Flask(__name__)
 app.config['DATABASE_URL'] = os.environ['DATABASE_URL']
+
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance between two points
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    # haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+    # Radius of earth in kilometers is 6371
+    km = 6371* c
+    return km
 
 # RETRIEVE POST
 @app.route('/getFeed', methods=['GET', 'POST'])
@@ -27,6 +43,28 @@ def getFeedPost():
     try:
         with dict_cur as cursor:
             sql = "SELECT * FROM events INNER JOIN followings ON events.userid = followings.followingid WHERE followings.userid = %s"
+
+
+            cursor.execute(sql, (data["userid"], ))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
+@app.route('/getNearbyPost', methods=['GET', 'POST'])
+def getNearbyPost():
+    data = request.json
+    
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM post "
 
 
             cursor.execute(sql, (data["userid"], ))
