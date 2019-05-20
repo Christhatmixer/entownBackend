@@ -16,7 +16,7 @@ class Point(object):
     def __init__(self, x, y):
       self.x = x
       self.y = y
-        
+
 def adapt_point(point):
      x = psycopg2.extras.adapt(point.x).getquoted()
      y = psycopg2.extras.adapt(point.y).getquoted()
@@ -67,6 +67,7 @@ def getFeedPost():
 @app.route('/getNearbyPost', methods=['GET', 'POST'])
 def getNearbyPost():
     data = request.json
+
 
 
     connection = psycopg2.connect(app.config["DATABASE_URL"])
@@ -216,10 +217,11 @@ def newEvent():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO events (name,description,company,userid,eventid,datenum,endtime,latitude,longitude,address,photos) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            psycopg2.extras.register_adapter(Point, adapt_point)
+            sql = "INSERT INTO events (name,description,company,userid,eventid,datenum,endtime,latitude,longitude,address,photos,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],data["datenum"],data["endtime"],
                                  data["latitude"],data["longitude"],data["address"],
-                                 data["photos"]))
+                                 data["photos"], Point(data["latitude"],data["longitude"])))
             print(cursor)
             connection.commit()
     finally:
