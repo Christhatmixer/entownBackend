@@ -12,6 +12,15 @@ from geopy.distance import geodesic
 from math import radians, cos, sin, asin, sqrt
 
 
+class Point(object):
+    def __init__(self, x, y):
+      self.x = x
+      self.y = y
+        
+def adapt_point(point):
+     x = psycopg2.extras.adapt(point.x).getquoted()
+     y = psycopg2.extras.adapt(point.y).getquoted()
+     return psycopg2.extras.AsIs("'(%s, %s)'" % (x, y))
 
 
 app = Flask(__name__)
@@ -58,7 +67,7 @@ def getFeedPost():
 @app.route('/getNearbyPost', methods=['GET', 'POST'])
 def getNearbyPost():
     data = request.json
-    
+
 
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
