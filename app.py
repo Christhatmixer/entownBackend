@@ -229,7 +229,7 @@ def newEvent():
                                  data["latitude"],data["longitude"],data["address"],
                                  data["photos"],
                                  Point(longitude,
-                                       data[latitude])))
+                                       latitude)))
             print(cursor)
             connection.commit()
     finally:
