@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 
 import psycopg2
 import psycopg2.extras
+import psycopg2.extensions
 import sys
 import json
 import requests
@@ -18,8 +19,8 @@ class Point(object):
       self.y = y
 
 def adapt_point(point):
-     x = psycopg2.extras.adapt(point.x).getquoted()
-     y = psycopg2.extras.adapt(point.y).getquoted()
+     x = psycopg2.extensions.adapt(point.x).getquoted()
+     y = psycopg2.extensions.adapt(point.y).getquoted()
      return psycopg2.extras.AsIs("'(%s, %s)'" % (x, y))
 
 
@@ -217,7 +218,8 @@ def newEvent():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            psycopg2.extras.register_adapter(Point, adapt_point)
+
+            psycopg2.extensions.register_adapter(Point, adapt_point)
             sql = "INSERT INTO events (name,description,company,userid,eventid,datenum,endtime,latitude,longitude,address,photos,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],data["datenum"],data["endtime"],
                                  data["latitude"],data["longitude"],data["address"],
