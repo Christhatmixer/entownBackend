@@ -216,6 +216,7 @@ def newEvent():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
     data = request.json
+    print(data)
     try:
         with connection.cursor() as cursor:
 
