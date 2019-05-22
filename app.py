@@ -221,7 +221,7 @@ def newEvent():
         with connection.cursor() as cursor:
 
             psycopg2.extensions.register_adapter(Point, adapt_point)
-            sql = "INSERT INTO events (name,description,company,userid,eventid,datenum,endtime,latitude,longitude,address,photos,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO events (name,description,company,userid,eventid,datenum,endtime,latitude,longitude,address,photos,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],data["datenum"],data["endtime"],
                                  data["latitude"],data["longitude"],data["address"],
                                  data["photos"],
