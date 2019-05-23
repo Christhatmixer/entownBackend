@@ -219,7 +219,7 @@ def newEvent():
     print(Point(data["latitude"],data["longitude"]).x)
     try:
         with connection.cursor() as cursor:
-#
+
             psycopg2.extensions.register_adapter(Point, adapt_point)
             latitude = data["latitude"]
             longitude = data["longitude"]
