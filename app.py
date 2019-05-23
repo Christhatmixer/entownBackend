@@ -217,10 +217,11 @@ def newEvent():
 
     data = request.json
     print(data)
+    psycopg2.extensions.register_adapter(Point, adapt_point)
     try:
         with connection.cursor() as cursor:
 
-            psycopg2.extensions.register_adapter(Point, adapt_point)
+            
             latitude = float(data["latitude"])
             longitude = float(data["longitude"])
             print(latitude)
