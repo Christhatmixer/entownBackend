@@ -21,7 +21,7 @@ class Point(object):
 def adapt_point(point):
      x = psycopg2.extensions.adapt(point.x).getquoted()
      y = psycopg2.extensions.adapt(point.y).getquoted()
-     return psycopg2.extensions.AsIs("'(%s, %s)'" % (x, y))
+     return psycopg2.extensions.AsIs("'(%s, %s)'" % (psycopg2.extensions.adapt(point.x), psycopg2.extensions.adapt(point.y)))
 
 
 app = Flask(__name__)
@@ -221,7 +221,7 @@ def newEvent():
     try:
         with connection.cursor() as cursor:
 
-            
+
             latitude = float(data["latitude"])
             longitude = float(data["longitude"])
             print(latitude)
