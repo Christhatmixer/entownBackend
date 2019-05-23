@@ -216,7 +216,7 @@ def newEvent():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
     data = request.json
-    print(Point(data["latitude"],data["longitude"]).x)
+   
     try:
         with connection.cursor() as cursor:
 
