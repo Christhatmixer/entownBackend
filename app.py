@@ -378,7 +378,7 @@ def getMessagePreviews():
     try:
         with dict_cur as cursor:
             sql = "SELECT DISTINCT FROM messages WHERE receivinguserid = %s OR sendinguserid = %s"
-            cursor.execute(sql, (data["userID"], ))
+            cursor.execute(sql, (data["userid"], ))
 
             result = cursor.fetchall()
             print(result)
