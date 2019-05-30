@@ -370,6 +370,24 @@ def getMessages():
         connection.close()
     return jsonify(result)
 
+@app.route('/getMessagePreviews', methods=['GET', 'POST'])
+def getMessagePreviews():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT DISTINCT FROM messages WHERE receivinguserid = %s OR sendinguserid = %s"
+            cursor.execute(sql, (data["userID"], ))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
 # RELATIONSHOP MANAGEMENT
 @app.route('/checkFollow', methods=['GET', 'POST'])
 def checkFollow():
