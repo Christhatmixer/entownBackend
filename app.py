@@ -344,7 +344,7 @@ def sendMessage():
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO messages (text,sendinguserid,receivingid) VALUES (%s,%s,%s)"
-            cursor.execute(sql, (data["text"], data["userid"], data["receivingid"]))
+            cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivingid"]))
             print(sql)
             connection.commit()
     finally:
