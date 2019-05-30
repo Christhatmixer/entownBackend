@@ -343,8 +343,8 @@ def sendMessage():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO messages (text,sendinguserid,receivingid) VALUES (%s,%s,%s)"
-            cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivingid"]))
+            sql = "INSERT INTO messages (text,sendinguserid,receivinguserid) VALUES (%s,%s,%s)"
+            cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"]))
             print(sql)
             connection.commit()
     finally:
