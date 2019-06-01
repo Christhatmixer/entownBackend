@@ -344,9 +344,9 @@ def sendMessage():
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO messages (text,sendinguserid,receivinguserid, conversationid) VALUES (%s,%s,%s,%s)"
-            updateConversationQuery = "UPDATE conversations SET lastupdated = current_timestamp"
+            updateConversationQuery = "UPDATE conversations SET lastupdated = current_timestamp WHERE conversationid = %s"
             cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"],data["conversationid"]))
-            cursor.execute(updateConversationQuery,(data["conversationid"],data["conversationid"]))
+            cursor.execute(updateConversationQuery,(data["conversationid"],))
 
             print(sql)
             connection.commit()
