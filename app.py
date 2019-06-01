@@ -344,7 +344,25 @@ def sendMessage():
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO messages (text,sendinguserid,receivinguserid, conversationid) VALUES (%s,%s,%s,%s)"
-            conversationQuery = "INSERT INTO conversations (conversationid, users) "
+        
+            cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"],data["conversationid"]))
+
+            print(sql)
+            connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
+
+@app.route('/createNewThread', methods=['GET', 'POST'])
+def createNewThread():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    try:
+        with connection.cursor() as cursor:
+            sql = "INSERT INTO messages (text,sendinguserid,receivinguserid, conversationid) VALUES (%s,%s,%s,%s)"
+            conversationQuery = "INSERT INTO conversations (conversationid, users) VALUES (%s, %s)"
             cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"],data["conversationid"]))
             cursor.execute(conversationQuery, (data["conversationid"],data["users"]))
             print(sql)
