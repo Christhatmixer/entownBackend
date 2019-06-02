@@ -380,8 +380,8 @@ def getMessages():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM messages INNER JOIN users ON comments.userid = events.eventid WHERE eventid = %s"
-            cursor.execute(sql, (data["userID"], ))
+            sql = "select * from messages inner join users on users.userid = messages.sendinguserid where messages.conversationid = 5s"
+            cursor.execute(sql, (data["conversationid"], ))
 
             result = cursor.fetchall()
             print(result)
