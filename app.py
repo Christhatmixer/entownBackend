@@ -343,7 +343,7 @@ def sendMessage():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO messages (text,sendinguserid, conversationid) VALUES (%s,%s,%s)"
+            sql = "INSERT INTO messages (text,sendinguserid,sendinguserprofileimageurl,sendingusername conversationid) VALUES (%s,%s,%s,%s,%s)"
             updateConversationQuery = "UPDATE conversations SET lastupdated = current_timestamp WHERE conversationid = %s"
             cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"],data["conversationid"]))
             cursor.execute(updateConversationQuery,(data["conversationid"],))
