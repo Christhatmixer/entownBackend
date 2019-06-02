@@ -398,8 +398,9 @@ def getMessagePreviews():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT DISTINCT receivinguserid, sendinguserid FROM messages WHERE receivinguserid = %s OR sendinguserid = %s"
-            cursor.execute(sql, (data["userid"],data["userid"] ))
+            sql = "select distinct on (messages.conversationid) * from messages " \
+                  "inner join conversations on messages.conversationid = conversations.conversationid  where %s = ANY(conversations.users)"
+            cursor.execute(sql, (data["userid"]))
 
             result = cursor.fetchall()
             print(result)
