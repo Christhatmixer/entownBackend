@@ -403,7 +403,9 @@ def getMessagePreviews():
             cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
-            print(result)
+
+            print(result["users"])
+
 
             connection.commit()
     finally:
