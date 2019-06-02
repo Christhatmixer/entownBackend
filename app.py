@@ -403,9 +403,11 @@ def getMessagePreviews():
             cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
+            json = jsonify(result)
 
-            print(result)
-            #t
+
+            print(json["users"])
+
 
 
             connection.commit()
