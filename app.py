@@ -343,7 +343,7 @@ def sendMessage():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO messages (text,sendinguserid,receivinguserid, conversationid) VALUES (%s,%s,%s,%s)"
+            sql = "INSERT INTO messages (text,sendinguserid, conversationid) VALUES (%s,%s,%s)"
             updateConversationQuery = "UPDATE conversations SET lastupdated = current_timestamp WHERE conversationid = %s"
             cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"],data["conversationid"]))
             cursor.execute(updateConversationQuery,(data["conversationid"],))
@@ -380,7 +380,7 @@ def getMessages():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "select * from messages inner join users on users.userid = messages.sendinguserid where messages.conversationid = 5s"
+            sql = "select * from messages inner join users on users.userid = messages.sendinguserid where messages.conversationid = %s"
             cursor.execute(sql, (data["conversationid"], ))
 
             result = cursor.fetchall()
@@ -403,11 +403,6 @@ def getMessagePreviews():
             cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
-            json = jsonify(result)
-
-
-            print(json)
-
 
 
             connection.commit()
