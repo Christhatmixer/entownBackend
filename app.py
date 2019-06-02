@@ -406,7 +406,7 @@ def getMessagePreviews():
             json = jsonify(result)
 
 
-            print(json["users"])
+            print(json)
 
 
 
