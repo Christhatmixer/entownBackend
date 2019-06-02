@@ -400,7 +400,7 @@ def getMessagePreviews():
         with dict_cur as cursor:
             sql = "select distinct on (messages.conversationid) * from messages " \
                   "inner join conversations on messages.conversationid = conversations.conversationid  where %s = ANY(conversations.users)"
-            cursor.execute(sql, (data["userid"]))
+            cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
             print(result)
