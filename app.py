@@ -363,9 +363,9 @@ def createNewThread():
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO messages (text,sendinguserid,receivinguserid, conversationid) VALUES (%s,%s,%s,%s)"
-            conversationQuery = "INSERT INTO conversations (conversationid, users) VALUES (%s, %s)"
+            conversationQuery = "INSERT INTO conversations (conversationid, users, isgroupchat) VALUES (%s, %s, %s)"
             cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"],data["conversationid"]))
-            cursor.execute(conversationQuery, (data["conversationid"],data["users"]))
+            cursor.execute(conversationQuery, (data["conversationid"],data["users"],data["isgroupchat"]))
             print(sql)
             connection.commit()
     finally:
