@@ -405,6 +405,7 @@ def getMessagePreviews():
             result = cursor.fetchall()
 
             print(result)
+            #t
 
 
             connection.commit()
