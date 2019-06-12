@@ -11,6 +11,7 @@ import os
 import geopy
 from geopy.distance import geodesic
 from math import radians, cos, sin, asin, sqrt
+import uuid
 
 
 class Point(object):
@@ -339,13 +340,16 @@ def searchUsers():
 @app.route('/sendMessage', methods=['GET', 'POST'])
 def sendMessage():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
+    # Generate UUID server side instead of in database in case of database migration
+    identifier = uuid.uuid1()
+
 
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO messages (text,sendinguserid,sendinguserprofileimageurl,sendingname,conversationid) VALUES (%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO messages (text,sendinguserid,sendinguserprofileimageurl,sendingname,conversationid,messageid) VALUES (%s,%s,%s,%s,%s,%s)"
             updateConversationQuery = "UPDATE conversations SET lastupdated = current_timestamp WHERE conversationid = %s"
-            cursor.execute(sql, (data["text"], data["sendinguserid"], data["sendinguserprofileimageurl"],data["sendingname"],data["conversationid"]))
+            cursor.execute(sql, (data["text"], data["sendinguserid"], data["sendinguserprofileimageurl"],data["sendingname"],data["conversationid"],identifier))
             cursor.execute(updateConversationQuery,(data["conversationid"],))
 
             print(sql)
@@ -359,13 +363,15 @@ def sendMessage():
 def createNewThread():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
+    conversationIdentifier = uuid.uuid4()
+
     data = request.json
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO messages (text,sendinguserid,receivinguserid, conversationid) VALUES (%s,%s,%s,%s)"
             conversationQuery = "INSERT INTO conversations (conversationid, users, isgroupchat) VALUES (%s, %s, %s)"
-            cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"],data["conversationid"]))
-            cursor.execute(conversationQuery, (data["conversationid"],data["users"],data["isgroupchat"]))
+            cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"],conversationIdentifier))
+            cursor.execute(conversationQuery, (conversationIdentifier,data["users"],data["isgroupchat"]))
             print(sql)
             connection.commit()
     finally:
