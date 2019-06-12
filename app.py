@@ -341,7 +341,7 @@ def searchUsers():
 def sendMessage():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     # Generate UUID server side instead of in database in case of database migration
-    identifier = uuid.uuid1()
+    identifier = str(uuid.uuid1())
 
 
     data = request.json
@@ -363,7 +363,7 @@ def sendMessage():
 def createNewThread():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
-    conversationIdentifier = uuid.uuid4()
+    conversationIdentifier = str(uuid.uuid4())
 
     data = request.json
     try:
