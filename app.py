@@ -405,7 +405,7 @@ def getMessagePreviews():
     try:
         with dict_cur as cursor:
             sql = '''select * from users INNER join
-(select lastmessageid,sendinguserid from messages inner join conversations on messages.conversationid = conversations.conversationid  where %s = ANY(conversations.users) and %s != messages.sendinguserid limit 1) as query
+(select lastmessageid,sendinguserid,isgroupchat from messages inner join conversations on messages.conversationid = conversations.conversationid  where %s = ANY(conversations.users) and %s != messages.sendinguserid limit 1) as query
 on users.userid = query.sendinguserid
 INNER JOIN
 messages on messages.messageid = query.lastmessageid'''
