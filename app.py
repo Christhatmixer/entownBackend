@@ -12,6 +12,8 @@ import geopy
 from geopy.distance import geodesic
 from math import radians, cos, sin, asin, sqrt
 import uuid
+from pusher_chatkit import PusherChatKit
+from pusher_chatkit.backends import RequestsBackend, TornadoBackend
 
 
 class Point(object):
@@ -27,6 +29,12 @@ def adapt_point(point):
 
 app = Flask(__name__)
 app.config['DATABASE_URL'] = os.environ['DATABASE_URL']
+
+chatkit = PusherChatKit(
+    'v1:us1:2a275666-6587-43bb-badc-5ad580835adb',
+    '46a04e29-2073-456c-aac9-6dc4c4c6d7f7:Oswqk13zzdrd3uZl0qEyEqOikot07IGUjZ29nLda+6Q=',
+    RequestsBackend or TornadoBackend
+)
 
 def haversine(lon1, lat1, lon2, lat2):
     """
@@ -162,6 +170,7 @@ def registerUser():
         with connection.cursor() as cursor:
             sql = "INSERT INTO users (userid, email, name, username, radius) VALUES (%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["userid"], data["email"],data["name"],data["username"], data["radius"]))
+            PusherChatKit.create_user(data["userid"],data["name"])
 
             connection.commit()
     finally:
@@ -336,6 +345,12 @@ def searchUsers():
 
 
 # MESSAGING
+
+@app.route('/generateChatKitToken', methods=['GET', 'POST'])
+def generateChatKitToken():
+    data = request.json
+    return jsonify(PusherChatKit.generate_token(user_id=data["userid"]))
+
 
 @app.route('/sendMessage', methods=['GET', 'POST'])
 def sendMessage():
