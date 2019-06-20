@@ -349,7 +349,7 @@ def searchUsers():
 @app.route('/generateChatKitToken', methods=['GET', 'POST'])
 def generateChatKitToken():
     data = request.json
-    token = PusherChatKit.generate_token(user_id=data["userid"])
+    token = PusherChatKit.generate_token(chatkit,user_id=data["userid"])
     print(token)
     return token
 
