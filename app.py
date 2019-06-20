@@ -13,7 +13,7 @@ from geopy.distance import geodesic
 from math import radians, cos, sin, asin, sqrt
 import uuid
 from pusher_chatkit import PusherChatKit
-from pusher_chatkit.backends import RequestsBackend, TornadoBackend
+from pusher_chatkit.backends import RequestsBackend
 
 
 class Point(object):
@@ -33,7 +33,7 @@ app.config['DATABASE_URL'] = os.environ['DATABASE_URL']
 chatkit = PusherChatKit(
     'v1:us1:2a275666-6587-43bb-badc-5ad580835adb',
     '46a04e29-2073-456c-aac9-6dc4c4c6d7f7:Oswqk13zzdrd3uZl0qEyEqOikot07IGUjZ29nLda+6Q=',
-    RequestsBackend or TornadoBackend
+    RequestsBackend
 )
 
 def haversine(lon1, lat1, lon2, lat2):
