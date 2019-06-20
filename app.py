@@ -348,7 +348,7 @@ def searchUsers():
 
 @app.route('/generateChatKitToken', methods=['GET', 'POST'])
 def generateChatKitToken():
-    data = request.json
+    data = request.args.get("userid")
     print(data)
     token = chatkit.authenticate_user(user_id=data["userid"])
     print(token)
