@@ -353,7 +353,7 @@ def generateChatKitToken():
 
     token = chatkit.authenticate_user(user_id=userid)
     print(token)
-    return token
+    return jsonify(token)
 
 
 @app.route('/sendMessage', methods=['GET', 'POST'])
