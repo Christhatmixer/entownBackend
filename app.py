@@ -74,6 +74,27 @@ def getFeedPost():
         connection.close()
     return jsonify(result)
 
+@app.route('/getPostFeed', methods=['GET', 'POST'])
+def getPostFeed():
+    data = request.json
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM post INNER JOIN followings ON post.userid = followings.followingid WHERE followings.userid = %s"
+
+
+            cursor.execute(sql, (data["userid"], ))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
 @app.route('/getNearbyPost', methods=['GET', 'POST'])
 def getNearbyPost():
     data = request.json
