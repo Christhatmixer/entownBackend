@@ -250,6 +250,29 @@ def newEvent():
 
     return "success"
 
+@app.route('/newPost', methods=['GET', 'POST'])
+def newPost():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    print(data)
+    psycopg2.extensions.register_adapter(Point, adapt_point)
+    try:
+        with connection.cursor() as cursor:
+
+
+
+
+            sql = "INSERT INTO post (name,text,userid,postid,ismedia,postpictureurl,tags) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+            cursor.execute(sql, (data["name"],data["text"],data["userid"],data["postid"],data["ismedia"],data["postpictureurl"],
+                                 data["tags"]))
+            print(cursor)
+            connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
+
 @app.route('/updatePost', methods=['GET', 'POST'])
 def updatePost():
     data = request.json
