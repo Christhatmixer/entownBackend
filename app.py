@@ -186,7 +186,10 @@ def getStateEvents():
 def registerUser():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
+
     data = request.json
+
+    chatkit.create_user(data["userid"],data["name"],data["profileimageurl"])
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO users (userid, email, name, username, radius) VALUES (%s,%s,%s,%s,%s)"
