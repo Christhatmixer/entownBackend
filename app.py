@@ -573,6 +573,41 @@ def getFollowingCount():
         connection.close()
     return jsonify(result)
 
+@app.route('/getSubscribers', methods=['GET', 'POST'])
+def getSubscribers():
+    data = request.json
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM users INNER JOIN followings ON users.userid = followings.followingid WHERE followings.followingid = %s"
+            print(sql)
+            cursor.execute(sql, (data["userid"],))
+            result = cursor.fetchall()
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
+@app.route('/checkLobbyStatus', methods=['GET', 'POST'])
+def checkLobbyStatus():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "select 1 FROM lobbies WHERE name = %s AND state = %s"
+            print(sql)
+            cursor.execute(sql, (data["name"],data["state"]))
+            result = cursor.fetchall()
+            print(result)
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
 
 if __name__ == '__main__':
     app.run()
