@@ -196,7 +196,7 @@ def registerUser():
         with connection.cursor() as cursor:
             sql = "INSERT INTO users (userid, email, name, username, radius) VALUES (%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["userid"], data["email"],data["name"],data["username"], data["radius"]))
-            PusherChatKit.create_user(data["userid"],data["name"])
+           
 
             connection.commit()
     finally:
