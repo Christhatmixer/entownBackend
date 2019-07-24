@@ -182,6 +182,8 @@ def getStateEvents():
         connection.close()
     return jsonify(result)
 
+# USER MANAGEMENT
+
 @app.route('/registerUser', methods=['GET', 'POST'])
 def registerUser():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
@@ -189,7 +191,7 @@ def registerUser():
 
     data = request.json
 
-    chatkit.create_user(data["userid"],data["name"],data["profileimageurl"])
+    chatkit.create_user(data["userid"],data["name"])
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO users (userid, email, name, username, radius) VALUES (%s,%s,%s,%s,%s)"
@@ -201,6 +203,9 @@ def registerUser():
         connection.close()
 
     return "success"
+
+
+
 
 @app.route('/updateUser', methods=['GET', 'POST'])
 def updateUser():
