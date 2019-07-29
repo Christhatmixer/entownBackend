@@ -617,7 +617,7 @@ def checkLobbyStatus():
 def createNewChat():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
-    c
+
 
     data = request.json
     try:
