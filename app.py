@@ -613,6 +613,26 @@ def checkLobbyStatus():
         connection.close()
     return jsonify(result)
 
+@app.route('/createNewChat', methods=['GET', 'POST'])
+def createNewChat():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    c
+
+    data = request.json
+    try:
+        with connection.cursor() as cursor:
+            sql = "INSERT INTO lobbies (name,id,state) VALUES (%s,%s,%s)"
+
+            cursor.execute(sql, (data["name"], data["id"], data["state"]))
+
+            print(sql)
+            connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
+
 
 if __name__ == '__main__':
     app.run()
