@@ -599,6 +599,7 @@ def getSubscribers():
 @app.route('/checkLobbyStatus', methods=['GET', 'POST'])
 def checkLobbyStatus():
     data = request.json
+    print(data)
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
