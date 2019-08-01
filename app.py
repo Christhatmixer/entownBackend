@@ -603,7 +603,7 @@ def checkLobbyStatus():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "select 1 FROM lobbies WHERE name = %s AND state = %s"
+            sql = "select 1 FROM lobbies WHERE cityname = %s AND state = %s"
             print(sql)
             cursor.execute(sql, (data["name"],data["state"]))
             result = cursor.fetchall()
