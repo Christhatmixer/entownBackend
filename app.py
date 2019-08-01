@@ -622,7 +622,7 @@ def createNewChat():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO lobbies (name,id,state) VALUES (%s,%s,%s)"
+            sql = "INSERT INTO lobbies (cityname,id,state) VALUES (%s,%s,%s)"
 
             cursor.execute(sql, (data["name"], data["id"], data["state"]))
 
