@@ -194,8 +194,8 @@ def registerUser():
     chatkit.create_user(data["userid"],data["name"])
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO users (userid, email, name, username,profilepictureurl,radius) VALUES (%s,%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["userid"], data["email"],data["name"],data["username"],data["profilepictureurl"], data["radius"]))
+            sql = "INSERT INTO users (userid, email, name, username,profileimageurl,radius) VALUES (%s,%s,%s,%s,%s,%s)"
+            cursor.execute(sql, (data["userid"], data["email"],data["name"],data["username"],data["profileimageurl"], data["radius"]))
 
 
             connection.commit()
