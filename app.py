@@ -217,8 +217,8 @@ def updateUser():
             for key in data:
                 print("updated %s" % (key.lower()))
 
-                sql = "UPDATE users {column} VALUES (%s)".format(column=key.lower())
-                cursor.execute(sql, (data[key],))
+                sql = "UPDATE users SET %s = %s WHERE userid =  %s"
+                cursor.execute(sql, (key,data["profileimageurl"],data["userid"]))
 
                 connection.commit()
     finally:
