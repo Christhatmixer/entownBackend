@@ -212,8 +212,9 @@ def updateUser():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
     data = request.json
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
-        with connection.cursor() as cursor:
+        with dict_cur as cursor:
             for key,value in data.items():
                 if key == "userid":
                     continue
