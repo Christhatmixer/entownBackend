@@ -214,7 +214,7 @@ def updateUser():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            for key,value in data:
+            for key,value in data.items():
                 if key == "userid":
                     continue
                 else:
