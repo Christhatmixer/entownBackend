@@ -222,8 +222,8 @@ def updateUser():
 
                     print("updated %s" % (key.lower()))
 
-                    sql = "UPDATE users SET users.%s = %s WHERE userid =  %s"
-                    cursor.execute(sql, (key.lower(),value,data["userid"]))
+                    sql = "UPDATE users SET {column} = %s WHERE userid =  %s".format(column=key)
+                    cursor.execute(sql, (value,data["userid"]))
 
                     connection.commit()
     finally:
