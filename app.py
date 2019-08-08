@@ -215,6 +215,7 @@ def updateUser():
     try:
         with connection.cursor() as cursor:
             for key in data:
+                print("updated %s" % (key))
 
                 sql = "UPDATE users ({column}) VALUES (%s)".format(column=key)
                 cursor.execute(sql, (data[key],))
