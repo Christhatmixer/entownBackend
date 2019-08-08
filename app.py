@@ -214,13 +214,17 @@ def updateUser():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            for key in data:
-                print("updated %s" % (key.lower()))
+            for key,value in data:
+                if key == "userid":
+                    continue
+                else:
 
-                sql = "UPDATE users SET %s = %s WHERE userid =  %s"
-                cursor.execute(sql, (key,data["profileimageurl"],data["userid"]))
+                    print("updated %s" % (key.lower()))
 
-                connection.commit()
+                    sql = "UPDATE users SET %s = %s WHERE userid =  %s"
+                    cursor.execute(sql, (key,value,data["userid"]))
+
+                    connection.commit()
     finally:
         connection.close()
 
