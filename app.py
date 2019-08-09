@@ -218,6 +218,14 @@ def updateUser():
             for key,value in data.items():
                 if key == "userid":
                     continue
+                elif key == "profileImageURL":
+                    chatkit.update_user(data["userid"],data["name"],data["profileImageURL"])
+                    print("updated %s" % (key.lower()))
+
+                    sql = "UPDATE users SET {column} = %s WHERE userid =  %s".format(column=key)
+                    cursor.execute(sql, (value, data["userid"]))
+
+                    connection.commit()
                 else:
 
                     print("updated %s" % (key.lower()))
