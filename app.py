@@ -204,7 +204,23 @@ def registerUser():
 
     return "success"
 
-
+@app.route('/checkUsername', methods=['GET', 'POST'])
+def checkUsername():
+    data = request.json
+    print(data)
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "select * FROM users WHERE username = %s LIMIT 1"
+            print(sql)
+            cursor.execute(sql, (data["username"]))
+            result = cursor.fetchall()
+            print(result)
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
 
 
 @app.route('/updateUser', methods=['GET', 'POST'])
