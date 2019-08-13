@@ -214,7 +214,7 @@ def checkUsername():
         with dict_cur as cursor:
             sql = "select * FROM users WHERE username = %s LIMIT 1"
             print(sql)
-            cursor.execute(sql, (data["username"]))
+            cursor.execute(sql, (data["username"],))
             result = cursor.fetchall()
             print(result)
             connection.commit()
