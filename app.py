@@ -182,6 +182,34 @@ def getStateEvents():
         connection.close()
     return jsonify(result)
 
+
+@app.route('/updateEventImage', methods=['GET', 'POST'])
+def updateEventImage():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            for key,value in data.items():
+                if key == "eventid":
+                    continue
+
+                else:
+
+                    print("updated %s" % (key.lower()))
+
+                    sql = "UPDATE events SET {column} = %s WHERE eventid =  %s".format(column=key)
+                    cursor.execute(sql, (value,data["eventid"]))
+
+                    connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
+
+
+
 # USER MANAGEMENT
 
 @app.route('/registerUser', methods=['GET', 'POST'])
