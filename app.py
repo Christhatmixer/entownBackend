@@ -354,10 +354,10 @@ def newEvent():
     try:
         with extensionCur as cursor:
 
-            latitude = float(data["latitude"])
-            longitude = float(data["longitude"])
+            latitude = data["latitude"]
+            longitude = data["longitude"]
             print(latitude)
-            location = Point(4.2, 6.8)
+            location = Point(latitude, longitude)
             print(location.x)
 
             sql = "INSERT INTO events (name,description,company,userid,eventid,starttimestamp,endtimestamp,endtime,latitude,longitude,address,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
