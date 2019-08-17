@@ -36,7 +36,7 @@ class Point(object):
 def adapt_point(point):
     x = psycopg2.extensions.adapt(point.x).getquoted()
     y = psycopg2.extensions.adapt(point.y).getquoted()
-    return psycopg2.extensions.AsIs("(%s, %s)" % (x,y))
+    return psycopg2.extensions.AsIs("'(%s, %s)'" % (x,y))
 
 psycopg2.extensions.register_adapter(Point, adapt_point)
 
