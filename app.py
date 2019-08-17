@@ -38,6 +38,8 @@ def adapt_point(point):
     y = psycopg2.extensions.adapt(point.y).getquoted()
     return psycopg2.extensions.AsIs("'(%s, %s)'" % (x,y))
 
+psycopg2.extensions.register_adapter(Point, adapt_point)
+
 
 app = Flask(__name__)
 app.config['DATABASE_URL'] = os.environ['DATABASE_URL']
@@ -346,7 +348,7 @@ def newEvent():
 
     data = request.json
     print(data)
-    psycopg2.extensions.register_adapter(Point, adapt_point)
+
     extensionCur = connection.cursor(cursor_factory=LoggingCursor)
 
     try:
@@ -355,9 +357,9 @@ def newEvent():
             latitude = float(data["latitude"])
             longitude = float(data["longitude"])
             print(latitude)
-            location = Point(latitude, longitude)
+            location = Point(4.2, 6.8)
             print(location.x)
-            
+
             sql = "INSERT INTO events (name,description,company,userid,eventid,starttimestamp,endtimestamp,endtime,latitude,longitude,address,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],
                                  data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
