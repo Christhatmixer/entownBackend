@@ -346,7 +346,7 @@ def newEvent():
             longitude = float(data["longitude"])
             print(latitude)
             location = Point(latitude,longitude)
-            print(location)
+            print(location.x)
 
 
 
