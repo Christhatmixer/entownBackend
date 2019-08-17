@@ -18,13 +18,14 @@ from pusher_chatkit.backends import RequestsBackend
 
 class Point(object):
     def __init__(self, x, y):
-      self.x = x
-      self.y = y
+        self.x = x
+        self.y = y
+
 
 def adapt_point(point):
-     x = psycopg2.extensions.adapt(point.x).getquoted()
-     y = psycopg2.extensions.adapt(point.y).getquoted()
-     return psycopg2.extensions.AsIs("'(%s, %s)'" % (psycopg2.extensions.adapt(x), psycopg2.extensions.adapt(y)))
+    x = psycopg2.extensions.adapt(point.x).getquoted()
+    y = psycopg2.extensions.adapt(point.y).getquoted()
+    return psycopg2.extensions.AsIs("'(%s, %s)'" % (x,y))
 
 
 app = Flask(__name__)
@@ -36,6 +37,7 @@ chatkit = PusherChatKit(
     RequestsBackend
 )
 
+
 def haversine(lon1, lat1, lon2, lat2):
     """
     Calculate the great circle distance between two points
@@ -46,11 +48,12 @@ def haversine(lon1, lat1, lon2, lat2):
     # haversine formula
     dlon = lon2 - lon1
     dlat = lat2 - lat1
-    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
     c = 2 * asin(sqrt(a))
     # Radius of earth in kilometers is 6371
-    km = 6371* c
+    km = 6371 * c
     return km
+
 
 # RETRIEVE POST
 @app.route('/getFeed', methods=['GET', 'POST'])
@@ -63,8 +66,7 @@ def getFeedPost():
         with dict_cur as cursor:
             sql = "SELECT * FROM events INNER JOIN followings ON events.userid = followings.followingid WHERE followings.userid = %s"
 
-
-            cursor.execute(sql, (data["userid"], ))
+            cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
             print(result)
@@ -73,6 +75,7 @@ def getFeedPost():
     finally:
         connection.close()
     return jsonify(result)
+
 
 @app.route('/getPostFeed', methods=['GET', 'POST'])
 def getPostFeed():
@@ -84,8 +87,7 @@ def getPostFeed():
         with dict_cur as cursor:
             sql = "SELECT * FROM post INNER JOIN followings ON post.userid = followings.followingid WHERE followings.userid = %s"
 
-
-            cursor.execute(sql, (data["userid"], ))
+            cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
             print(result)
@@ -95,11 +97,10 @@ def getPostFeed():
         connection.close()
     return jsonify(result)
 
+
 @app.route('/getNearbyPost', methods=['GET', 'POST'])
 def getNearbyPost():
     data = request.json
-
-
 
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -107,8 +108,7 @@ def getNearbyPost():
         with dict_cur as cursor:
             sql = "SELECT * FROM post "
 
-
-            cursor.execute(sql, (data["userid"], ))
+            cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
             print(result)
@@ -117,6 +117,7 @@ def getNearbyPost():
     finally:
         connection.close()
     return jsonify(result)
+
 
 @app.route('/getUserPost', methods=['GET', 'POST'])
 def getUserPost():
@@ -126,7 +127,7 @@ def getUserPost():
     try:
         with dict_cur as cursor:
             sql = "SELECT * FROM post WHERE userid = %s"
-            cursor.execute(sql, (data["userID"], ))
+            cursor.execute(sql, (data["userID"],))
 
             result = cursor.fetchall()
             print(result)
@@ -135,6 +136,7 @@ def getUserPost():
     finally:
         connection.close()
     return jsonify(result)
+
 
 @app.route('/getSavedEvents', methods=['GET', 'POST'])
 def getSavedEvents():
@@ -144,7 +146,7 @@ def getSavedEvents():
     try:
         with dict_cur as cursor:
             sql = "SELECT * FROM savedevents INNER JOIN events ON savedevents.eventid = events.eventid WHERE savedevents.userid = %s"
-            cursor.execute(sql, (data["userid"], ))
+            cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
             print(result)
@@ -153,6 +155,7 @@ def getSavedEvents():
     finally:
         connection.close()
     return jsonify(result)
+
 
 # RETRIEVE LOCAL POPULAR EVENTS
 @app.route('/getStateEvents', methods=['GET', 'POST'])
@@ -165,17 +168,15 @@ def getStateEvents():
         with dict_cur as cursor:
             sql = "SELECT * FROM events WHERE state = %s"
 
-
-            cursor.execute(sql, (data["state"], ))
+            cursor.execute(sql, (data["state"],))
 
             result = cursor.fetchall()
             print(result)
-            userLocation = (data["latitude"],data["longitude"])
+            userLocation = (data["latitude"], data["longitude"])
             for event in result:
-                eventLocation = (float(event["latitude"]),float(event["longitude"]))
+                eventLocation = (float(event["latitude"]), float(event["longitude"]))
                 dist = geopy.distance.vincenty(userLocation, eventLocation)
                 print(dist.miles)
-
 
             connection.commit()
     finally:
@@ -191,7 +192,6 @@ def updateEventImage():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-
 
             sql = "UPDATE events SET photos = %s WHERE eventid =  %s"
             cursor.execute(sql, (data["photos"], data["eventid"]))
@@ -216,7 +216,6 @@ def createEvent():
     try:
         with dict_cur as cursor:
 
-
             sql = "UPDATE events SET photos = %s WHERE eventid =  %s"
             cursor.execute(sql, (data["images"], data["eventid"]))
 
@@ -231,29 +230,27 @@ def createEvent():
     return "success"
 
 
-
-
 # USER MANAGEMENT
 
 @app.route('/registerUser', methods=['GET', 'POST'])
 def registerUser():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
-
     data = request.json
 
-    chatkit.create_user(data["userid"],data["name"])
+    chatkit.create_user(data["userid"], data["name"])
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO users (userid, email, name, username,profileimageurl,radius) VALUES (%s,%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["userid"], data["email"],data["name"],data["username"],data["profileimageurl"], data["radius"]))
-
+            cursor.execute(sql, (
+            data["userid"], data["email"], data["name"], data["username"], data["profileimageurl"], data["radius"]))
 
             connection.commit()
     finally:
         connection.close()
 
     return "success"
+
 
 @app.route('/checkUsername', methods=['GET', 'POST'])
 def checkUsername():
@@ -282,11 +279,11 @@ def updateUser():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            for key,value in data.items():
+            for key, value in data.items():
                 if key == "userid":
                     continue
                 elif key == "profileImageURL":
-                    chatkit.update_user(data["userid"],data["name"],data["profileImageURL"])
+                    chatkit.update_user(data["userid"], data["name"], data["profileImageURL"])
                     print("updated %s" % (key.lower()))
 
                     sql = "UPDATE users SET {column} = %s WHERE userid =  %s".format(column=key)
@@ -298,13 +295,14 @@ def updateUser():
                     print("updated %s" % (key.lower()))
 
                     sql = "UPDATE users SET {column} = %s WHERE userid =  %s".format(column=key)
-                    cursor.execute(sql, (value,data["userid"]))
+                    cursor.execute(sql, (value, data["userid"]))
 
                     connection.commit()
     finally:
         connection.close()
 
     return "success"
+
 
 @app.route('/getUserInfo', methods=['GET', 'POST'])
 def getUserInfo():
@@ -341,19 +339,16 @@ def newEvent():
     try:
         with connection.cursor() as cursor:
 
-
             latitude = float(data["latitude"])
             longitude = float(data["longitude"])
             print(latitude)
-            location = Point(latitude,longitude)
+            location = Point(latitude, longitude)
             print(location.x)
-
-
 
             sql = "INSERT INTO events (name,description,company,userid,eventid,starttimestamp,endtimestamp,endtime,latitude,longitude,address,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],
-                                 data["starttimestamp"],data["endtimestamp"],data["endtime"],data["starttime"],
-                                 data["latitude"],data["longitude"],data["address"],
+                                 data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
+                                 data["latitude"], data["longitude"], data["address"],
                                  location))
             print(cursor)
             connection.commit()
@@ -361,6 +356,7 @@ def newEvent():
         connection.close()
 
     return "success"
+
 
 @app.route('/newPost', methods=['GET', 'POST'])
 def newPost():
@@ -372,18 +368,17 @@ def newPost():
     try:
         with connection.cursor() as cursor:
 
-
-
-
             sql = "INSERT INTO post (name,text,userid,postid,ismedia,postpictureurl,tags) VALUES (%s,%s,%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["name"],data["text"],data["userid"],data["postid"],data["ismedia"],data["postpictureurl"],
-                                 data["tags"]))
+            cursor.execute(sql, (
+            data["name"], data["text"], data["userid"], data["postid"], data["ismedia"], data["postpictureurl"],
+            data["tags"]))
             print(cursor)
             connection.commit()
     finally:
         connection.close()
 
     return "success"
+
 
 @app.route('/updatePost', methods=['GET', 'POST'])
 def updatePost():
@@ -393,16 +388,16 @@ def updatePost():
     try:
         with dict_cur as cursor:
             for key in data:
-
                 sql = "UPDATE post SET %s = %s WHERE eventid = %s"
 
-                cursor.execute(sql, (data["key"],data["value"],data["eventid"]))
+                cursor.execute(sql, (data["key"], data["value"], data["eventid"]))
 
                 connection.commit()
     finally:
         connection.close()
 
     return "success"
+
 
 @app.route('/saveEvent', methods=['GET', 'POST'])
 def saveEvent():
@@ -412,16 +407,17 @@ def saveEvent():
     try:
         with dict_cur as cursor:
 
-                sql = "INSERT INTO savedevents (userid, eventid) VALUES ('{userid}','{eventid}')".format(
-                    userid=data["userid"], eventid=data["eventid"])
+            sql = "INSERT INTO savedevents (userid, eventid) VALUES ('{userid}','{eventid}')".format(
+                userid=data["userid"], eventid=data["eventid"])
 
-                cursor.execute(sql, (data["userid"], data["eventid"]))
+            cursor.execute(sql, (data["userid"], data["eventid"]))
 
-                connection.commit()
+            connection.commit()
     finally:
         connection.close()
 
     return "success"
+
 
 # COMMENTS
 
@@ -433,7 +429,7 @@ def getComments():
     try:
         with dict_cur as cursor:
             sql = "SELECT * FROM comments INNER JOIN users ON comments.userid = events.eventid WHERE eventid = %s"
-            cursor.execute(sql, (data["userID"], ))
+            cursor.execute(sql, (data["userID"],))
 
             result = cursor.fetchall()
             print(result)
@@ -443,6 +439,7 @@ def getComments():
         connection.close()
     return jsonify(result)
 
+
 @app.route('/postComment', methods=['GET', 'POST'])
 def postComment():
     data = request.json
@@ -451,14 +448,13 @@ def postComment():
     try:
         with dict_cur as cursor:
             sql = "INSERT INTO comments (text,userid,eventid) VALUES (%s,%s,%s)"
-            cursor.execute(sql, (data["text"],data["userid"], data["eventid"]))
-
-
+            cursor.execute(sql, (data["text"], data["userid"], data["eventid"]))
 
             connection.commit()
     finally:
         connection.close()
     return "success"
+
 
 # SEARCHING
 @app.route('/searchUsers', methods=['GET', 'POST'])
@@ -470,7 +466,7 @@ def searchUsers():
         with dict_cur as cursor:
             sql = "SELECT * FROM users WHERE userName ILIKE %s LIMIT 10"
             print(sql)
-            cursor.execute(sql, (data["query"] + "%", ))
+            cursor.execute(sql, (data["query"] + "%",))
             result = cursor.fetchall()
             print(result)
             connection.commit()
@@ -497,14 +493,15 @@ def sendMessage():
     # Generate UUID server side instead of in database in case of database migration
     identifier = str(uuid.uuid1())
 
-
     data = request.json
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO messages (text,sendinguserid,receivinguserid,sendinguserprofileimageurl,sendingname,conversationid,messageid) VALUES (%s,%s,%s,%s,%s,%s,%s)"
             updateConversationQuery = "UPDATE conversations SET lastupdated = current_timestamp,lastmessageid = %s  WHERE conversationid = %s"
-            cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"],data["sendinguserprofileimageurl"],data["sendingname"],data["conversationid"],identifier))
-            cursor.execute(updateConversationQuery,(identifier,data["conversationid"]))
+            cursor.execute(sql, (
+            data["text"], data["sendinguserid"], data["receivinguserid"], data["sendinguserprofileimageurl"],
+            data["sendingname"], data["conversationid"], identifier))
+            cursor.execute(updateConversationQuery, (identifier, data["conversationid"]))
 
             print(sql)
             connection.commit()
@@ -512,6 +509,7 @@ def sendMessage():
         connection.close()
 
     return "success"
+
 
 @app.route('/createNewThread', methods=['GET', 'POST'])
 def createNewThread():
@@ -524,14 +522,15 @@ def createNewThread():
         with connection.cursor() as cursor:
             sql = "INSERT INTO messages (text,sendinguserid,receivinguserid, conversationid) VALUES (%s,%s,%s,%s)"
             conversationQuery = "INSERT INTO conversations (conversationid, users, isgroupchat) VALUES (%s, %s, %s)"
-            cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"],conversationIdentifier))
-            cursor.execute(conversationQuery, (conversationIdentifier,data["users"],data["isgroupchat"]))
+            cursor.execute(sql, (data["text"], data["sendinguserid"], data["receivinguserid"], conversationIdentifier))
+            cursor.execute(conversationQuery, (conversationIdentifier, data["users"], data["isgroupchat"]))
             print(sql)
             connection.commit()
     finally:
         connection.close()
 
     return "success"
+
 
 @app.route('/getMessages', methods=['GET', 'POST'])
 def getMessages():
@@ -541,7 +540,7 @@ def getMessages():
     try:
         with dict_cur as cursor:
             sql = "select * from messages inner join users on users.userid = messages.sendinguserid where messages.conversationid = %s"
-            cursor.execute(sql, (data["conversationid"], ))
+            cursor.execute(sql, (data["conversationid"],))
 
             result = cursor.fetchall()
             print(result)
@@ -550,6 +549,7 @@ def getMessages():
     finally:
         connection.close()
     return jsonify(result)
+
 
 @app.route('/getMessagePreviews', methods=['GET', 'POST'])
 def getMessagePreviews():
@@ -563,15 +563,15 @@ def getMessagePreviews():
 on users.userid = query.sendinguserid
 INNER JOIN
 messages on messages.messageid = query.lastmessageid'''
-            cursor.execute(sql, (data["userid"],data["userid"]))
+            cursor.execute(sql, (data["userid"], data["userid"]))
 
             result = cursor.fetchall()
-
 
             connection.commit()
     finally:
         connection.close()
     return jsonify(result)
+
 
 # RELATIONSHOP MANAGEMENT
 @app.route('/checkFollow', methods=['GET', 'POST'])
@@ -593,14 +593,14 @@ def checkFollow():
     return jsonify(result)
 
 
-
 @app.route('/followUser', methods=['GET', 'POST'])
 def followUser():
     data = request.json
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO followings (userID, followingID) VALUES ('{userID}','{followingID}')".format(userID=data["userID"], followingID=data["followingID"])
+            sql = "INSERT INTO followings (userID, followingID) VALUES ('{userID}','{followingID}')".format(
+                userID=data["userID"], followingID=data["followingID"])
             print(sql)
             cursor.execute(sql)
 
@@ -608,6 +608,7 @@ def followUser():
     finally:
         connection.close()
     return "success"
+
 
 @app.route('/unfollowUser', methods=['GET', 'POST'])
 def unfollowUser():
@@ -616,7 +617,8 @@ def unfollowUser():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     try:
         with connection.cursor() as cursor:
-            sql = "DELETE FROM followings WHERE userID = '{userID}' AND followingID = '{followingID}'".format(userID=data["userID"], followingID=data["followingID"])
+            sql = "DELETE FROM followings WHERE userID = '{userID}' AND followingID = '{followingID}'".format(
+                userID=data["userID"], followingID=data["followingID"])
             print(sql)
             cursor.execute(sql)
 
@@ -624,6 +626,7 @@ def unfollowUser():
     finally:
         connection.close()
     return "success"
+
 
 @app.route('/getFollowersCount', methods=['GET', 'POST'])
 def getFollowersCount():
@@ -643,6 +646,7 @@ def getFollowersCount():
         connection.close()
     return jsonify(result)
 
+
 @app.route('/getFollowingCount', methods=['GET', 'POST'])
 def getFollowingCount():
     data = request.json
@@ -660,6 +664,7 @@ def getFollowingCount():
     finally:
         connection.close()
     return jsonify(result)
+
 
 @app.route('/getSubscribers', methods=['GET', 'POST'])
 def getSubscribers():
@@ -679,6 +684,7 @@ def getSubscribers():
         connection.close()
     return jsonify(result)
 
+
 @app.route('/checkLobbyStatus', methods=['GET', 'POST'])
 def checkLobbyStatus():
     data = request.json
@@ -689,7 +695,7 @@ def checkLobbyStatus():
         with dict_cur as cursor:
             sql = "select * FROM lobbies WHERE cityname = %s AND state = %s LIMIT 1"
             print(sql)
-            cursor.execute(sql, (data["name"],data["state"]))
+            cursor.execute(sql, (data["name"], data["state"]))
             result = cursor.fetchall()
             print(result)
             connection.commit()
@@ -697,11 +703,10 @@ def checkLobbyStatus():
         connection.close()
     return jsonify(result)
 
+
 @app.route('/createNewChat', methods=['GET', 'POST'])
 def createNewChat():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
-
-
 
     data = request.json
     try:
