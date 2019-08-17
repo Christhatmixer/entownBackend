@@ -191,18 +191,16 @@ def updateEventImage():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            for key,value in data.items():
-                if key == "eventid":
-                    continue
 
-                else:
 
-                    print("updated %s" % (key.lower()))
+            sql = "UPDATE events SET photos = %s WHERE eventid =  %s"
+            cursor.execute(sql, (data["images"], data["eventid"]))
 
-                    sql = "UPDATE events SET {column} = %s WHERE eventid =  %s".format(column=key)
-                    cursor.execute(sql, (value,data["eventid"]))
+            connection.commit()
 
-                    connection.commit()
+
+
+
     finally:
         connection.close()
 
