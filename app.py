@@ -345,14 +345,16 @@ def newEvent():
             latitude = float(data["latitude"])
             longitude = float(data["longitude"])
             print(latitude)
+            location = Point(latitude,longitude)
+            print(location)
+
 
 
             sql = "INSERT INTO events (name,description,company,userid,eventid,starttimestamp,endtimestamp,endtime,latitude,longitude,address,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],
                                  data["starttimestamp"],data["endtimestamp"],data["endtime"],data["starttime"],
                                  data["latitude"],data["longitude"],data["address"],
-                                 Point(longitude,
-                                       latitude)))
+                                 location))
             print(cursor)
             connection.commit()
     finally:
