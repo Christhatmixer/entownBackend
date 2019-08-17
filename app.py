@@ -207,6 +207,31 @@ def updateEventImage():
     return "success"
 
 
+@app.route('/createEvent', methods=['GET', 'POST'])
+def createEvent():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+
+
+            sql = "UPDATE events SET photos = %s WHERE eventid =  %s"
+            cursor.execute(sql, (data["images"], data["eventid"]))
+
+            connection.commit()
+
+
+
+
+    finally:
+        connection.close()
+
+    return "success"
+
+
+
 
 # USER MANAGEMENT
 
@@ -322,8 +347,8 @@ def newEvent():
             print(latitude)
 
 
-            sql = "INSERT INTO events (name,description,company,userid,eventid,datenum,endtime,latitude,longitude,address,photos,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],data["datenum"],data["endtime"],
+            sql = "INSERT INTO events (name,description,company,userid,eventid,starttimestamp,endtimestamp,endtime,latitude,longitude,address,photos,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],data["starttimestamp"],data["endtimestamp"],data["endtime"],
                                  data["latitude"],data["longitude"],data["address"],
                                  data["photos"],
                                  Point(longitude,
