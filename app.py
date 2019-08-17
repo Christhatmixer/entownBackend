@@ -351,8 +351,8 @@ def newEvent():
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],
                                  data["starttimestamp"],data["endtimestamp"],data["endtime"],data["starttime"],
                                  data["latitude"],data["longitude"],data["address"],
-                                 Point(longitude,
-                                       latitude)))
+                                 Point(data["longitude"],
+                                       data["latitude"])))
             print(cursor)
             connection.commit()
     finally:
