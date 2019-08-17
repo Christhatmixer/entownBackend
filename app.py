@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, jsonify
 import psycopg2
 import psycopg2.extras
 import psycopg2.extensions
+import logging
 import sys
 import json
 import requests
@@ -15,6 +16,16 @@ import uuid
 from pusher_chatkit import PusherChatKit
 from pusher_chatkit.backends import RequestsBackend
 
+class LoggingCursor(psycopg2.extensions.cursor):
+    def execute(self, sql, args=None):
+        logger = logging.getLogger('sql_debug')
+        logger.info(self.mogrify(sql, args))
+
+        try:
+            psycopg2.extensions.cursor.execute(self, sql, args)
+        except Exception as exc:
+            logger.error("%s: %s" % (exc.__class__.__name__, exc))
+            raise
 
 class Point(object):
     def __init__(self, x, y):
@@ -336,15 +347,17 @@ def newEvent():
     data = request.json
     print(data)
     psycopg2.extensions.register_adapter(Point, adapt_point)
+    extensionCur = connection.cursor(cursor_factory=LoggingCursor)
+
     try:
-        with connection.cursor() as cursor:
+        with extensionCur as cursor:
 
             latitude = float(data["latitude"])
             longitude = float(data["longitude"])
             print(latitude)
             location = Point(latitude, longitude)
             print(location.x)
-
+            psycopg2.extensions.cursor.execute()
             sql = "INSERT INTO events (name,description,company,userid,eventid,starttimestamp,endtimestamp,endtime,latitude,longitude,address,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["userid"], data["eventid"],
                                  data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
