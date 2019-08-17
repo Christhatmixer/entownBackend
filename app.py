@@ -24,7 +24,7 @@ class Point(object):
 def adapt_point(point):
      x = psycopg2.extensions.adapt(point.x).getquoted()
      y = psycopg2.extensions.adapt(point.y).getquoted()
-     return psycopg2.extensions.AsIs("'(%s, %s)'" % (psycopg2.extensions.adapt(point.x), psycopg2.extensions.adapt(point.y)))
+     return psycopg2.extensions.AsIs("'(%s, %s)'" % (psycopg2.extensions.adapt(x), psycopg2.extensions.adapt(y)))
 
 
 app = Flask(__name__)
