@@ -194,7 +194,7 @@ def updateEventImage():
 
 
             sql = "UPDATE events SET photos = %s WHERE eventid =  %s"
-            cursor.execute(sql, (data["images"], data["eventid"]))
+            cursor.execute(sql, (data["photos"], data["eventid"]))
 
             connection.commit()
 
