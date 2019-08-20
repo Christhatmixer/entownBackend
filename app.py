@@ -169,6 +169,24 @@ def getSavedEvents():
         connection.close()
     return jsonify(result)
 
+@app.route('/getNearbyEvents', methods=['GET', 'POST'])
+def getSavedEvents():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM events WHERE ST_DISTANCE_SPHERE()"
+            cursor.execute(sql, (data["userid"],))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
 
 # RETRIEVE LOCAL POPULAR EVENTS
 @app.route('/getStateEvents', methods=['GET', 'POST'])
@@ -357,7 +375,7 @@ def newEvent():
             latitude = float(data["latitude"])
             longitude = float(data["longitude"])
             print(latitude)
-            location = Point(latitude, longitude)
+            location = Point(longitude, latitude)
             print(location.x)
             locationTuple = '(%s,%s)' % (latitude,longitude)
 
