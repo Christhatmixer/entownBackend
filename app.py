@@ -170,7 +170,7 @@ def getSavedEvents():
     return jsonify(result)
 
 @app.route('/getNearbyEvents', methods=['GET', 'POST'])
-def getSavedEvents():
+def getNearbyEvents():
     data = request.json
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
