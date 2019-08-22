@@ -379,7 +379,7 @@ def newEvent():
             print(location.x)
             locationTuple = '(%s,%s)' % (longitude,latitude)
             geom = "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)"
-            updateGeom = "UPDATE events SET the_geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE events.eventid = %s"
+            updateGeom = "UPDATE events SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE events.eventid = %s"
 
             sql = "INSERT INTO events (name,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["eventlink"],data["userid"], data["eventid"],
