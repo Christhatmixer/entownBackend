@@ -150,6 +150,24 @@ def getUserPost():
         connection.close()
     return jsonify(result)
 
+@app.route('/getUserEvents', methods=['GET', 'POST'])
+def getUserEvents():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM events WHERE userid = %s"
+            cursor.execute(sql, (data["userID"],))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
 
 @app.route('/getSavedEvents', methods=['GET', 'POST'])
 def getSavedEvents():
