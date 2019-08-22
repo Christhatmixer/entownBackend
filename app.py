@@ -378,13 +378,15 @@ def newEvent():
             location = Point(longitude, latitude)
             print(location.x)
             locationTuple = '(%s,%s)' % (longitude,latitude)
-            geom = "ST_GeomFromText('POINT(%s %s)', 4326)" % (data["longitude"],data["latitude"])
+            geom = "ST_SetSRID(ST_MakePoint(long, lat), 4326)"
+            updateGeom = "UPDATE events SET the_geom = ST_SetSRID(ST_MakePoint(long, lat), 4326) WHERE events.eventid = %s"
 
-            sql = "INSERT INTO events (name,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,location, geom) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO events (name,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,location, geom) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["eventlink"],data["userid"], data["eventid"],
                                  data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
                                  data["latitude"], data["longitude"], data["address"],
-                                 locationTuple,geom))
+                                 locationTuple))
+            cursor.execute(updateGeom, (data["eventid"],))
             print(cursor)
             connection.commit()
     finally:
