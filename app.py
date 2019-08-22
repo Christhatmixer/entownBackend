@@ -176,8 +176,8 @@ def getNearbyEvents():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM events WHERE ST_DISTANCE_SPHERE()"
-            cursor.execute(sql, (data["userid"],))
+            sql = "SELECT * FROM events WHERE ST_DWithin(geom, ST_MakePoint(%s,%s)::geography, %s);"
+            cursor.execute(sql, (data["longitude"],data["latitude"],data["radius"]))
 
             result = cursor.fetchall()
             print(result)
