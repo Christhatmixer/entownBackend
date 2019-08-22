@@ -377,13 +377,14 @@ def newEvent():
             print(latitude)
             location = Point(longitude, latitude)
             print(location.x)
-            locationTuple = '(%s,%s)' % (latitude,longitude)
+            locationTuple = '(%s,%s)' % (longitude,latitude)
+            geom = "ST_SetSRID(ST_MakePoint(%s, %s), 4326)" % (longitude,latitude)
 
-            sql = "INSERT INTO events (name,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,location) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO events (name,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,location, geom) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["name"], data["description"], data["company"], data["eventlink"],data["userid"], data["eventid"],
                                  data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
                                  data["latitude"], data["longitude"], data["address"],
-                                 locationTuple))
+                                 locationTuple,geom))
             print(cursor)
             connection.commit()
     finally:
