@@ -92,7 +92,7 @@ def getFeedPost():
 @app.route('/getEventFeed', methods=['GET', 'POST'])
 def getEventFeed():
     data = request.json
-    currenttimestamp = float(data["starttimestamp"])
+    currenttimestamp = float(data["currenttimestamp"])
 
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
