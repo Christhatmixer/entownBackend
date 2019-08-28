@@ -89,6 +89,26 @@ def getFeedPost():
         connection.close()
     return jsonify(result)
 
+@app.route('/getEventFeed', methods=['GET', 'POST'])
+def getEventFeed():
+    data = request.json
+    starttimestamp = float(data["starttimestamp"])
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM events INNER JOIN followings ON post.userid = followings.followingid WHERE followings.userid = %s AND CAST(events.starttimestamp as decimal) >= s%"
+
+            cursor.execute(sql, (data["userid"],starttimestamp))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
 
 @app.route('/getPostFeed', methods=['GET', 'POST'])
 def getPostFeed():
