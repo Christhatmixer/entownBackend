@@ -450,10 +450,10 @@ def newPost():
             locationTuple = '(%s,%s)' % (longitude, latitude)
             updateGeom = "UPDATE post SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE post.postid = %s"
 
-            sql = "INSERT INTO post (name,text,userid,postid,ismedia,postpictureurl,tags) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO post (name,text,userid,postid,ismedia,postpictureurl,tags,longitude,latitude) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (
             data["name"], data["text"], data["userid"], data["postid"], data["ismedia"], data["postpictureurl"],
-            data["tags"]))
+            data["tags"],data["longitude"],data["latitude"]))
             cursor.execute(updateGeom, (data["postid"],))
             print(cursor)
             connection.commit()
@@ -471,7 +471,25 @@ def updatePost():
     try:
         with dict_cur as cursor:
             for key in data:
-                sql = "UPDATE post SET %s = %s WHERE eventid = %s"
+                sql = "UPDATE post SET %s = %s WHERE postid = %s"
+
+                cursor.execute(sql, (data["key"], data["value"], data["postid"]))
+
+                connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
+
+@app.route('/updateEvent', methods=['GET', 'POST'])
+def updateEvent():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            for key in data:
+                sql = "UPDATE events SET %s = %s WHERE eventid = %s"
 
                 cursor.execute(sql, (data["key"], data["value"], data["eventid"]))
 
