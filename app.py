@@ -275,6 +275,28 @@ def updateEventImage():
 
     return "success"
 
+@app.route('/updatePostImage', methods=['GET', 'POST'])
+def updatePostImage():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+
+            sql = "UPDATE post SET photos = %s WHERE postid =  %s"
+            cursor.execute(sql, (data["photos"], data["eventid"]))
+
+            connection.commit()
+
+
+
+
+    finally:
+        connection.close()
+
+    return "success"
+
 
 @app.route('/createEvent', methods=['GET', 'POST'])
 def createEvent():
