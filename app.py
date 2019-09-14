@@ -285,7 +285,7 @@ def updatePostImage():
         with dict_cur as cursor:
 
             sql = "UPDATE post SET photos = %s WHERE postid =  %s"
-            cursor.execute(sql, (data["photos"], data["eventid"]))
+            cursor.execute(sql, (data["photos"], data["postid"]))
 
             connection.commit()
 
