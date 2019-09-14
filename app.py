@@ -284,8 +284,8 @@ def updatePostImage():
     try:
         with dict_cur as cursor:
 
-            sql = "UPDATE post SET photos = %s WHERE postid =  %s"
-            cursor.execute(sql, (data["photos"], data["postid"]))
+            sql = "UPDATE post SET photos = %s, ismedia = %s WHERE postid =  %s"
+            cursor.execute(sql, (data["photos"],data["ismedia"], data["postid"]))
 
             connection.commit()
 
@@ -472,9 +472,9 @@ def newPost():
             locationTuple = '(%s,%s)' % (longitude, latitude)
             updateGeom = "UPDATE post SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE post.postid = %s"
 
-            sql = "INSERT INTO post (text,userid,postid,ismedia,postpictureurl,longitude,latitude) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO post (text,userid,postid,ismedia,photos,longitude,latitude) VALUES (%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (
-            data["text"], data["userid"], data["postid"], data["ismedia"], data["postpictureurl"],
+            data["text"], data["userid"], data["postid"], data["ismedia"], data["photos"],
             data["longitude"],data["latitude"]))
             cursor.execute(updateGeom, (data["postid"],))
             print(cursor)
