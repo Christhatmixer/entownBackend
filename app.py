@@ -160,7 +160,7 @@ def getUserPost():
     try:
         with dict_cur as cursor:
             sql = "SELECT * FROM post WHERE userid = %s"
-            cursor.execute(sql, (data["userID"],))
+            cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
             print(result)
