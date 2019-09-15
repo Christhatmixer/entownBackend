@@ -159,7 +159,7 @@ def getUserPost():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM post ORDER BY datecreated DESC WHERE userid = %s"
+            sql = "SELECT * FROM post WHERE userid = %s ORDER BY datecreated DESC"
             cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
