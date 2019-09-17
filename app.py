@@ -139,9 +139,10 @@ def getNearbyPost():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM post ORDER BY post.geom <-> ST_SetSRID(ST_MakePoint(%s, %s),4326)"
+            sql = "SELECT * FROM post WHERE ST_Distance_Sphere(post.geom, ST_MakePoint(%s,%s)) <= %s"
 
-            cursor.execute(sql, (data["longitude"],data["latitude"]))
+
+            cursor.execute(sql, (data["longitude"],data["latitude"],data["radius"]))
 
             result = cursor.fetchall()
             print(result)
