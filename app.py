@@ -190,7 +190,15 @@ def getUserEvents():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM events WHERE userid = %s"
+            sql = '''
+                        SELECT distinct events.*, COUNT(likedevents.eventid) AS like_count,COUNT(comments.eventid) AS comment_count
+            FROM events
+                LEFT JOIN likedevents ON events.eventid = likedevents.eventid
+                LEFT JOIN "comments" ON events.eventid = "comments".eventid
+                where events.userid = %s
+            GROUP BY events.postid,events.userid,events."text",events.ismedia,events.photos,events.tags,
+            events.datecreated,events.geom,events.longitude,events.latitude
+                        '''
             cursor.execute(sql, (data["userID"],))
 
             result = cursor.fetchall()
