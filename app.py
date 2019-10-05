@@ -164,7 +164,15 @@ def getUserPost():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM post WHERE userid = %s ORDER BY datecreated DESC"
+            sql = '''
+            SELECT distinct post.*, COUNT(likedpost.postid) AS like_count,COUNT(comments.postid) AS comment_count
+FROM post
+    LEFT JOIN likedpost ON post.postid = likedpost.postid
+    LEFT JOIN "comments" ON post.postid = "comments".postid
+    where post.userid = %s
+GROUP BY post.postid,post.userid,post."text",post.ismedia,post.photos,post.tags,
+post.datecreated,post.geom,post.longitude,post.latitude
+            '''
             cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
@@ -500,7 +508,7 @@ def likePost():
     try:
         with dict_cur as cursor:
 
-            sql = "INSERT INTO likedpost (userid, postid) VALUES (%s,%s)"
+            sql = "select post.postid,post.ismedia,post.photos,post.'text',post.datecreated,post.userid, count(likedpost.postid) as numberoflikes from post left join likedpost on post.postid = likedpost.postid group by post.postid,post.ismedia,post.photos,post.'text',post.datecreated,post.userid"
 
             cursor.execute(sql, (data["userid"], data["postid"]))
 
