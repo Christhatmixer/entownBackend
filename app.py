@@ -489,6 +489,27 @@ def newPost():
 
     return "success"
 
+@app.route('/likePost', methods=['GET', 'POST'])
+def likePost():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    print(data)
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    try:
+        with dict_cur as cursor:
+
+            sql = "INSERT INTO likedpost (userid, postid) VALUES (%s,%s)"
+
+            cursor.execute(sql, (data["userid"], data["postid"]))
+
+            print(cursor)
+            connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
 
 @app.route('/updatePost', methods=['GET', 'POST'])
 def updatePost():
@@ -793,6 +814,23 @@ def getFollowingCount():
         connection.close()
     return jsonify(result)
 
+@app.route('/getLikeCount', methods=['GET', 'POST'])
+def getLikeCount():
+    data = request.json
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT COUNT(*) FROM liked_post WHERE followings.userid = %s"
+            print(sql)
+            cursor.execute(sql, (data["userid"],))
+            result = cursor.fetchall()
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
 
 @app.route('/getSubscribers', methods=['GET', 'POST'])
 def getSubscribers():
