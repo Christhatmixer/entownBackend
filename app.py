@@ -165,9 +165,9 @@ def getUserPost():
     try:
         with dict_cur as cursor:
             sql = '''
-            SELECT distinct post.*, COUNT(likedpost.postid) AS like_count,COUNT(comments.postid) AS comment_count
+            SELECT distinct post.*, COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count
 FROM post
-    LEFT JOIN likedpost ON post.postid = likedpost.postid
+    LEFT JOIN likes ON post.postid = likes.postid
     LEFT JOIN "comments" ON post.postid = "comments".postid
     where post.userid = %s
 GROUP BY post.postid,post.userid,post."text",post.ismedia,post.photos,post.tags,
