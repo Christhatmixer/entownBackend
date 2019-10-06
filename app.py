@@ -193,8 +193,8 @@ def getUserEvents():
             sql = '''
                         SELECT distinct events.*, COUNT(likedevents.eventid) AS like_count,COUNT(comments.eventid) AS comment_count
             FROM events
-                LEFT JOIN likedevents ON events.eventid = likedevents.eventid
-                LEFT JOIN "comments" ON events.eventid = "comments".eventid
+                LEFT JOIN likes ON events.eventid = likes.postid
+                LEFT JOIN "comments" ON events.eventid = "comments".postid
                 where events.userid = %s
             GROUP BY events.postid,events.userid,events."text",events.ismedia,events.photos,events.tags,
             events.datecreated,events.geom,events.longitude,events.latitude
@@ -593,8 +593,8 @@ def getComments():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM comments INNER JOIN users ON comments.userid = events.eventid WHERE eventid = %s"
-            cursor.execute(sql, (data["userID"],))
+            sql = "SELECT * FROM comments WHERE postid = %s"
+            cursor.execute(sql, (data["postid"],))
 
             result = cursor.fetchall()
             print(result)
