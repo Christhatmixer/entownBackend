@@ -612,14 +612,28 @@ def postComment():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "INSERT INTO comments (text,userid,eventid) VALUES (%s,%s,%s)"
-            cursor.execute(sql, (data["text"], data["userid"], data["eventid"]))
+            sql = "INSERT INTO comments (text,userid,postid) VALUES (%s,%s,%s)"
+            cursor.execute(sql, (data["text"], data["userid"], data["id"]))
 
             connection.commit()
     finally:
         connection.close()
     return "success"
 
+@app.route('/likeComment', methods=['GET', 'POST'])
+def postComment():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "INSERT INTO likes (postid,userid,type) VALUES (%s,%s,%s)"
+            cursor.execute(sql, (data["id"], data["userid"], "comment"))
+
+            connection.commit()
+    finally:
+        connection.close()
+    return "success"
 
 # SEARCHING
 @app.route('/searchUsers', methods=['GET', 'POST'])
