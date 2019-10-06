@@ -621,7 +621,7 @@ def postComment():
     return "success"
 
 @app.route('/likeComment', methods=['GET', 'POST'])
-def postComment():
+def likeComment():
     data = request.json
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
