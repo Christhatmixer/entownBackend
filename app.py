@@ -516,7 +516,7 @@ def likePost():
     try:
         with dict_cur as cursor:
 
-            sql = "select post.postid,post.ismedia,post.photos,post.'text',post.datecreated,post.userid, count(likedpost.postid) as numberoflikes from post left join likedpost on post.postid = likedpost.postid group by post.postid,post.ismedia,post.photos,post.'text',post.datecreated,post.userid"
+            sql = "select post.postid,post.ismedia,post.photos,post.text,post.datecreated,post.userid, count(likedpost.postid) as numberoflikes from post left join likedpost on post.postid = likedpost.postid group by post.postid,post.ismedia,post.photos,post.'text',post.datecreated,post.userid"
 
             cursor.execute(sql, (data["userid"], data["postid"]))
 
