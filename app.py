@@ -527,6 +527,28 @@ def likePost():
 
     return "success"
 
+@app.route('/unlikePost', methods=['GET', 'POST'])
+def unlikePost():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    print(data)
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    try:
+        with dict_cur as cursor:
+
+            sql = "DELETE FROM likes WHERE userid = %s and postid = %s"
+
+            cursor.execute(sql, (data["userid"], data["postid"]))
+
+            print(cursor)
+            connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
+
 @app.route('/updatePost', methods=['GET', 'POST'])
 def updatePost():
     data = request.json
