@@ -191,7 +191,7 @@ def getUserEvents():
     try:
         with dict_cur as cursor:
             sql = '''
-                        SELECT distinct events.*, COUNT(likedevents.eventid) AS like_count,COUNT(comments.eventid) AS comment_count
+                        SELECT distinct events.*, COUNT(likes.postid) AS like_count,COUNT(comments.eventid) AS comment_count
             FROM events
                 LEFT JOIN likes ON events.eventid = likes.postid
                 LEFT JOIN "comments" ON events.eventid = "comments".postid
