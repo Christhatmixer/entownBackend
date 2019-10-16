@@ -174,7 +174,7 @@ FROM post
     
     where post.userid = %s
 GROUP BY post.postid,post.userid,post."text",post.ismedia,post.photos,post.tags,
-post.datecreated,post.geom,post.longitude,post.latitude
+post.datecreated,post.geom,post.longitude,post.latitude,devicetoken
             '''
             cursor.execute(sql, (data["userid"],))
 
