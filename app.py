@@ -203,7 +203,7 @@ def getUserEvents():
             events.datecreated,events.geom,events.longitude,events.latitude,events.eventname,events.city,events.company,
             events.starttime,events.endtime,events.eventlink,events.country,events.address,events.state,events.description,
             events.datenum,events.starttimestamp,events.endtimestamp
-                        '''
+            '''
             cursor.execute(sql, (data["userID"],))
 
             result = cursor.fetchall()
@@ -549,6 +549,11 @@ def likePost():
 
 
             data = {'message': "%s liked your post." % data["username"]}
+            if data["selfdevicetoken"] == data["otherdevicetoken"]:
+                pass
+            else:
+                pushy.push(data["otherdevicetoken"], data)
+
     finally:
 
 
