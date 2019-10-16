@@ -174,7 +174,7 @@ FROM post
     
     where post.userid = %s
 GROUP BY post.postid,post.userid,post."text",post.ismedia,post.photos,post.tags,
-post.datecreated,post.geom,post.longitude,post.latitude,post.devicetoken
+post.datecreated,post.geom,post.longitude,post.latitude
             '''
             cursor.execute(sql, (data["userid"],))
 
@@ -372,7 +372,7 @@ def registerToken():
 
     data = request.json
 
-    chatkit.create_user(data["userid"], data["token"])
+
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO users (userid, devicetoken) VALUES (%s,%s)"
