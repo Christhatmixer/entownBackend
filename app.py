@@ -166,13 +166,15 @@ def getUserPost():
     try:
         with dict_cur as cursor:
             sql = '''
-            SELECT distinct post.*, COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count
+            SELECT distinct post.*, COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count,users.devicetoken AS devicetoken
 FROM post
     LEFT JOIN likes ON post.postid = likes.postid
     LEFT JOIN "comments" ON post.postid = "comments".postid
+    INNER JOIN users ON post.userid = users.userid
+    
     where post.userid = %s
 GROUP BY post.postid,post.userid,post."text",post.ismedia,post.photos,post.tags,
-post.datecreated,post.geom,post.longitude,post.latitude
+post.datecreated,post.geom,post.longitude,post.latitude,post.devicetoken
             '''
             cursor.execute(sql, (data["userid"],))
 
@@ -542,7 +544,12 @@ def likePost():
 
             print(cursor)
             connection.commit()
+
+
+            data = {'message': "%s liked your post." % data["username"]}
     finally:
+
+
         connection.close()
 
     return "success"
