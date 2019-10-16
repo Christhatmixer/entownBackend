@@ -377,7 +377,7 @@ def registerToken():
         with connection.cursor() as cursor:
             sql = "INSERT INTO users (userid, devicetoken) VALUES (%s,%s)"
             cursor.execute(sql, (
-            data["userid"], data["token"]))
+            data["userid"], data["devicetoken"]))
 
             connection.commit()
     finally:
