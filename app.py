@@ -8,6 +8,7 @@ import sys
 import json
 import requests
 from urllib.parse import urlparse
+from PushySDK import Pushy
 import os
 import geopy
 from geopy.distance import geodesic
@@ -49,7 +50,7 @@ chatkit = PusherChatKit(
     '46a04e29-2073-456c-aac9-6dc4c4c6d7f7:Oswqk13zzdrd3uZl0qEyEqOikot07IGUjZ29nLda+6Q=',
     RequestsBackend
 )
-
+pushy=Pushy('2917b380f7d027b7659997a46e420c51c9eed6054e563f0180c5aa8181e24497')
 
 def haversine(lon1, lat1, lon2, lat2):
     """
@@ -356,6 +357,25 @@ def registerUser():
             sql = "INSERT INTO users (userid, email, name, username,profileimageurl,radius) VALUES (%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (
             data["userid"], data["email"], data["name"], data["username"], data["profileimageurl"], data["radius"]))
+
+            connection.commit()
+    finally:
+        connection.close()
+
+    return "success"
+
+@app.route('/registerToken', methods=['GET', 'POST'])
+def registerToken():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+
+    chatkit.create_user(data["userid"], data["token"])
+    try:
+        with connection.cursor() as cursor:
+            sql = "INSERT INTO users (userid, devicetoken) VALUES (%s,%s)"
+            cursor.execute(sql, (
+            data["userid"], data["token"]))
 
             connection.commit()
     finally:
