@@ -201,7 +201,7 @@ def getUserEvents():
                 where events.userid = %s
             GROUP BY events.eventid,events.userid,events.photos,
             events.datecreated,events.geom,events.longitude,events.latitude,events.eventname,events.city,events.company,
-            events.starttime,events.endttime
+            events.starttime,events.endtime,events.eventlink
                         '''
             cursor.execute(sql, (data["userID"],))
 
