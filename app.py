@@ -199,7 +199,7 @@ def getUserEvents():
                 LEFT JOIN likes ON events.eventid = likes.postid
                 LEFT JOIN "comments" ON events.eventid = "comments".postid
                 where events.userid = %s
-            GROUP BY events.eventid,events.userid,events."text",events.ismedia,events.photos,events.tags,
+            GROUP BY events.eventid,events.userid,events.ismedia,events.photos,events.tags,
             events.datecreated,events.geom,events.longitude,events.latitude
                         '''
             cursor.execute(sql, (data["userID"],))
