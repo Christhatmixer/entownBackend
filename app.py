@@ -668,8 +668,8 @@ def postComment():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "INSERT INTO comments (text,userid,postid) VALUES (%s,%s,%s)"
-            cursor.execute(sql, (data["text"], data["userid"], data["id"]))
+            sql = "INSERT INTO comments (text,userid,postid,commentid) VALUES (%s,%s,%s,%s)"
+            cursor.execute(sql, (data["text"], data["userid"], data["id"],data["commentid"]))
 
             connection.commit()
     finally:
