@@ -649,7 +649,7 @@ def getComments():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT comments.*,COUNT(likes.postid) AS like_count,exists(select 1 from likes  where likes.postId = %s and likes.userId = %s limit 1) as liked FROM comments 
+            sql = '''SELECT comments.*,COUNT(likes.postid) AS like_count,exists(select 1 from likes  where likes.postId = %s and likes.userid = %s limit 1) as liked FROM comments 
             LEFT JOIN likes ON comments.commentid = likes.postid
             WHERE comments.postid = %s
             GROUP BY comments.postid,comments.text,comments.commentid,comments.datecreated,comments.userid
