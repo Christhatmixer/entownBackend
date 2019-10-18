@@ -119,7 +119,13 @@ def getPostFeed():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM post INNER JOIN followings ON post.userid = followings.followingid INNER JOIN users on post.userid = users.userid WHERE followings.userid = %s"
+            sql = '''SELECT post.*,exists(select 1 from likes  where likes.postId = %s and likes.userid = %s limit 1) as liked FROM post 
+            INNER JOIN followings ON post.userid = followings.followingid 
+            INNER JOIN users on post.userid = users.userid 
+            WHERE followings.userid = %s
+            GROUP BY post.userid,post.ismedia,post.text,post.postid,post.photos,
+            post.tags,post.datecreated,post.geom,post.longitude,post.latitude
+            '''
 
             cursor.execute(sql, (data["userid"],))
 
