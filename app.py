@@ -515,12 +515,9 @@ def newPost():
     psycopg2.extensions.register_adapter(Point, adapt_point)
     try:
         with connection.cursor() as cursor:
-            latitude = float(data["latitude"])
-            longitude = float(data["longitude"])
-            print(latitude)
-            location = Point(longitude, latitude)
-            print(location.x)
-            locationTuple = '(%s,%s)' % (longitude, latitude)
+
+
+            #locationTuple = '(%s,%s)' % (longitude, latitude)
             #updateGeom = "UPDATE post SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE post.postid = %s"
 
             sql = "INSERT INTO post (text,userid,postid,ismedia) VALUES (%s,%s,%s,%s)"
