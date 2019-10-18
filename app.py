@@ -649,7 +649,11 @@ def getComments():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM comments WHERE postid = %s"
+            sql = '''SELECT comments.*,COUNT(likes.postid) AS like_count FROM comments 
+            LEFT JOIN likes ON comments.commentid = likes.postid
+            WHERE postid = %s
+            GROUP BY comments.postid,comments.text,comments.commentid,comments.datecreated,comments.userid
+            '''
             cursor.execute(sql, (data["postid"],))
 
             result = cursor.fetchall()
