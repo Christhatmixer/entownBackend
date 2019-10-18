@@ -521,13 +521,12 @@ def newPost():
             location = Point(longitude, latitude)
             print(location.x)
             locationTuple = '(%s,%s)' % (longitude, latitude)
-            updateGeom = "UPDATE post SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE post.postid = %s"
+            #updateGeom = "UPDATE post SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE post.postid = %s"
 
-            sql = "INSERT INTO post (text,userid,postid,ismedia,longitude,latitude) VALUES (%s,%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO post (text,userid,postid,ismedia) VALUES (%s,%s,%s,%s)"
             cursor.execute(sql, (
-            data["text"], data["userid"], data["postid"], data["ismedia"],
-            data["longitude"],data["latitude"]))
-            cursor.execute(updateGeom, (data["postid"],))
+            data["text"], data["userid"], data["postid"], data["ismedia"]))
+            #cursor.execute(updateGeom, (data["postid"],))
             print(cursor)
             connection.commit()
     finally:
