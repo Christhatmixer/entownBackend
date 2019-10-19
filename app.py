@@ -99,7 +99,17 @@ def getEventFeed():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM events INNER JOIN followings ON events.userid = followings.followingid WHERE followings.userid = %s AND CAST(events.starttimestamp as decimal) >= %s"
+            sql = '''SELECT events.*,exists(select 1 from likes  where likes.postId = events.eventid and likes.userid = %s limit 1) as liked FROM events 
+            INNER JOIN followings ON events.userid = followings.followingid 
+            INNER JOIN users on post.userid = users.userid 
+            WHERE followings.userid = %s AND CAST(events.starttimestamp as decimal) >= %s
+            GROUP BY events.eventname, events.latitude,events.longitude,
+            events.city,events.country,events.state,events.userid,events.description,
+            events.eventid,events.photos,events.company,events.datenum,events.endttime,
+            events.starttime,events.address,events.starttimestamp,events.endtimestamp,
+            events.eventlink,events.geom,events.datecreated
+                
+            '''
 
             cursor.execute(sql, (data["userid"],currenttimestamp))
 
