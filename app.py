@@ -656,7 +656,7 @@ def getComments():
             WHERE comments.postid = %s
             GROUP BY comments.postid,comments.text,comments.commentid,comments.datecreated,comments.userid
             '''
-            cursor.execute(sql, (data["userid"],data["postid"]))
+            cursor.execute(sql, (data["postid"],data["userid"],data["postid"]))
 
             result = cursor.fetchall()
             print(result)
