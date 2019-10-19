@@ -124,7 +124,7 @@ def getPostFeed():
             INNER JOIN users on post.userid = users.userid 
             WHERE followings.userid = %s
             GROUP BY post.userid,post.ismedia,post.text,post.postid,post.photos,
-            post.tags,post.datecreated,post.geom,post.longitude,post.latitude
+            post.tags,post.datecreated,post.geom
             '''
 
             cursor.execute(sql, (data["userid"],data["userid"]))
