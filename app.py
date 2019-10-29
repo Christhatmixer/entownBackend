@@ -661,7 +661,7 @@ def getComments():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT comments.*,COUNT(likes.postid) AS like_count,COUNT(comments.* WHERE comments.replycommentid = comments.commentid) as totalreplies,exists(select 1 from likes where likes.postid = comments.commentid and likes.userid = %s limit 1) as liked FROM comments 
+            sql = '''SELECT comments.*,COUNT(likes.postid) AS like_count,COUNT(commentreplies.* WHERE commentreplies.replyid = comments.commentid) as totalreplies,exists(select 1 from likes where likes.postid = comments.commentid and likes.userid = %s limit 1) as liked FROM comments 
             LEFT JOIN likes ON comments.commentid = likes.postid
             WHERE comments.postid = %s
             GROUP BY comments.postid,comments.text,comments.commentid,comments.datecreated,comments.userid
@@ -682,11 +682,11 @@ def postComment():
     data = request.json
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    if data.get("isreply") != None:
+    if data.get("replyid") != None:
         try:
             with dict_cur as cursor:
-                sql = "INSERT INTO comments (text,userid,postid,commentid) VALUES (%s,%s,%s,%s,%s,%s)"
-                cursor.execute(sql, (data["text"], data["userid"], data["id"], data["commentid"],data["replycommentid"],data["isreply"]))
+                sql = "INSERT INTO commentreplies (text,userid,postid,commentid,replyid) VALUES (%s,%s,%s,%s,%s)"
+                cursor.execute(sql, (data["text"], data["userid"], data["id"], data["commentid"],data["replyid"]))
 
                 connection.commit()
         finally:
