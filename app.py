@@ -393,9 +393,9 @@ def registerToken():
 
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO users (userid, devicetoken) VALUES (%s,%s)"
+            sql = "UPDATE users SET userid = %s, devicetoken = %s WHERE userid = %s"
             cursor.execute(sql, (
-            data["userid"], data["devicetoken"]))
+            data["userid"], data["devicetoken"],data["userid"]))
 
             connection.commit()
     finally:
