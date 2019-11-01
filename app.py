@@ -663,7 +663,7 @@ def getComments():
         with dict_cur as cursor:
             sql = '''SELECT comments.*,COUNT(likes.postid) AS like_count,COUNT(commentreplies.replyid) as totalreplies,exists(select 1 from likes where likes.postid = comments.commentid and likes.userid = %s limit 1) as liked FROM comments 
             LEFT JOIN likes ON comments.commentid = likes.postid
-            INNER JOIN commentreplies ON comments.commentid = commentreplies.replyid
+            
             WHERE comments.postid = %s
             GROUP BY comments.postid,comments.text,comments.commentid,comments.datecreated,comments.userid
             '''
