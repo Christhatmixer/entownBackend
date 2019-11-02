@@ -666,7 +666,7 @@ def getComments():
             LEFT JOIN commentreplies ON comments.commentid = commentreplies.replyid
             LEFT JOIN users ON comments.userid = users.userid
             WHERE comments.postid = %s
-            GROUP BY comments.postid,comments.text,comments.commentid,comments.datecreated,comments.userid
+            GROUP BY comments.postid,comments.text,comments.commentid,comments.datecreated,comments.userid,users.username
             '''
             cursor.execute(sql, (data["userid"],data["postid"]))
 
