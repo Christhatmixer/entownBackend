@@ -185,8 +185,8 @@ def getUserPost():
             SELECT distinct post.*, COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count,users.devicetoken AS devicetoken
 FROM post
     LEFT JOIN likes ON post.postid = likes.postid
-    INNER JOIN "comments" ON post.postid = "comments".postid
-    INNER JOIN users ON post.userid = users.userid
+    LEFT JOIN "comments" ON post.postid = "comments".postid
+    LEFT JOIN users ON post.userid = users.userid
     
     where post.userid = %s
 GROUP BY post.postid,post.userid,post."text",post.ismedia,post.photos,post.tags,
