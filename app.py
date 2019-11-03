@@ -691,7 +691,7 @@ def getReplies():
             WHERE commentreplies.replyid = %s
             GROUP BY commentreplies.postid,commentreplies.text,commentreplies.commentid,commentreplies.datecreated,commentreplies.userid,users.username
             '''
-            cursor.execute(sql, (data["userid"],data["replyid"]))
+            cursor.execute(sql, (data["userid"],data["commentid"]))
 
             result = cursor.fetchall()
             print(result)
