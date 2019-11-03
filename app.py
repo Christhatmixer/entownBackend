@@ -689,7 +689,7 @@ def getReplies():
             LEFT JOIN likes ON commentreplies.commentid = likes.postid
             LEFT JOIN users ON commentreplies.userid = users.userid
             WHERE commentreplies.replyid = %s
-            GROUP BY commentreplies.postid,commentreplies.text,commentreplies.commentid,commentreplies.datecreated,commentreplies.userid,users.username
+            GROUP BY commentreplies.postid,commentreplies.text,commentreplies.commentid,commentreplies.datecreated,commentreplies.userid,users.username,commentreplies.replyid
             '''
             cursor.execute(sql, (data["userid"],data["commentid"]))
 
