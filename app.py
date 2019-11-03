@@ -685,7 +685,7 @@ def getReplies():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT commentreplies.*,users.username,COUNT(likes.postid) AS like_count,exists(select 1 from likes where likes.postid = comments.commentid and likes.userid = %s limit 1) as liked FROM commentreplies 
+            sql = '''SELECT commentreplies.*,users.username,COUNT(likes.postid) AS like_count,exists(select 1 from likes where likes.postid = commentreplies.commentid and likes.userid = %s limit 1) as liked FROM commentreplies 
             LEFT JOIN likes ON commentreplies.commentid = likes.postid
             LEFT JOIN users ON commentreplies.userid = users.userid
             WHERE commentreplies.replyid = %s
