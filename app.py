@@ -678,6 +678,29 @@ def getComments():
         connection.close()
     return jsonify(result)
 
+@app.route('/getReplies', methods=['GET', 'POST'])
+def getReplies():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = '''SELECT commentreplies.*,users.username,COUNT(likes.postid) AS like_count,exists(select 1 from likes where likes.postid = comments.commentid and likes.userid = %s limit 1) as liked FROM comments 
+            LEFT JOIN likes ON commentreplies.commentid = likes.postid
+            LEFT JOIN users ON commentreplies.userid = users.userid
+            WHERE commentreplies.replyid = %s
+            GROUP BY commentreplies.postid,commentreplies.text,commentreplies.commentid,commentreplies.datecreated,commentreplies.userid,users.username
+            '''
+            cursor.execute(sql, (data["userid"],data["replyid"]))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
 
 @app.route('/postComment', methods=['GET', 'POST'])
 def postComment():
