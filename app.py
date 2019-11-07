@@ -567,6 +567,15 @@ def likePost():
                 pushy.push(data["otherdevicetoken"], data)
 
     finally:
+        header = {"Content-Type": "application/json; charset=utf-8"}
+
+        payload = {"app_id": "e866c9f9-c862-4a1e-b605-b1a0820ca658",
+                   "include_player_ids": [data["otheruserid"]],
+                   "contents": {"en": data["username"] + " "+ "liked your post."}}
+
+        req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
+
+        print(req.status_code, req.reason)
 
 
         connection.close()
