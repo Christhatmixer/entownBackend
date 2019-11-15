@@ -1055,9 +1055,9 @@ def createNewChat():
     data = request.json
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO lobbies (cityname,id,state) VALUES (%s,%s,%s)"
+            sql = "INSERT INTO lobbies (cityname,url,state) VALUES (%s,%s,%s)"
 
-            cursor.execute(sql, (data["name"], data["id"], data["state"]))
+            cursor.execute(sql, (data["name"], data["url"], data["state"]))
 
             print(sql)
             connection.commit()
