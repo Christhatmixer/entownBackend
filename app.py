@@ -1018,9 +1018,12 @@ def getSubscribers():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM users INNER JOIN followings ON users.userid = followings.followingid WHERE followings.followingid = %s"
+            sql = '''SELECT * FROM users,exists(select 1 from followings where followings.userid = %s and followings.followingid = users.userid limit 1) as isFollowed 
+            INNER JOIN  followings ON users.userid = followings.followingid 
+            WHERE followings.followingid = %s
+            '''
             print(sql)
-            cursor.execute(sql, (data["userid"],))
+            cursor.execute(sql, (data["userid"],data["otheruserid"],))
             result = cursor.fetchall()
 
             connection.commit()
