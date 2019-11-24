@@ -78,7 +78,9 @@ def getFeedPost():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM events INNER JOIN followings ON events.userid = followings.followingid WHERE followings.userid = %s"
+            sql = '''SELECT * FROM events 
+                  INNER JOIN followings ON events.userid = followings.followingid 
+                  WHERE followings.userid = %s'''
 
             cursor.execute(sql, (data["userid"],))
 
@@ -954,6 +956,21 @@ def unfollowUser():
         connection.close()
     return "success"
 
+@app.route('/blockUser', methods=['GET', 'POST'])
+def blockUser():
+    data = request.json
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    try:
+        with connection.cursor() as cursor:
+            sql = "INSERT INTO blocks (userid, blockeduserid) VALUES (%s,%s)"
+            print(sql)
+            cursor.execute(sql, data["userid"],data["otheruserid"])
+
+            connection.commit()
+    finally:
+        connection.close()
+    return "success"
 
 @app.route('/getFollowersCount', methods=['GET', 'POST'])
 def getFollowersCount():
@@ -1018,9 +1035,30 @@ def getSubscribers():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT users.*,exists(select 1 from followings where followings.userid = %s and followings.followingid = users.userid limit 1) as isFollowed FROM users
+            sql = '''SELECT users.*,exists(select 1 from followings where followings.userid = %s and followings.followingid = users.userid limit 1) as isfollowed FROM users
             INNER JOIN  followings ON users.userid = followings.followingid 
             WHERE followings.followingid = %s
+            '''
+            print(sql)
+            cursor.execute(sql, (data["userid"],data["otheruserid"],))
+            result = cursor.fetchall()
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
+@app.route('/getSubscribed', methods=['GET', 'POST'])
+def getSubscribed():
+    data = request.json
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = '''SELECT users.*,exists(select 1 from followings where followings.userid = %s and followings.followingid = users.userid limit 1) as isfollowed FROM users
+            INNER JOIN  followings ON users.userid = followings.followingid 
+            WHERE followings.userid = %s
             '''
             print(sql)
             cursor.execute(sql, (data["userid"],data["otheruserid"],))
