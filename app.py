@@ -510,8 +510,7 @@ def newEvent():
             sql = "INSERT INTO events (eventname,price,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["eventname"],data["price"] ,data["description"], data["company"], data["eventlink"],data["userid"], data["eventid"],
                                  data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
-                                 data["latitude"], data["longitude"], data["address"],
-                                 locationTuple))
+                                 data["latitude"], data["longitude"], data["address"]))
             cursor.execute(updateGeom, (data["eventid"],))
             print(cursor)
             connection.commit()
