@@ -584,6 +584,21 @@ def likePost():
 
     return "success"
 
+@app.route('/likeEvent', methods=['GET', 'POST'])
+def likeEvent():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "INSERT INTO likes (postid,userid,type) VALUES (%s,%s,%s)"
+            cursor.execute(sql, (data["id"], data["userid"], "event"))
+
+            connection.commit()
+    finally:
+        connection.close()
+    return "success"
+
 @app.route('/unlikePost', methods=['GET', 'POST'])
 def unlikePost():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
