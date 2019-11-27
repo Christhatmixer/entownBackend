@@ -104,7 +104,7 @@ def getEventFeed():
             sql = '''SELECT events.*,exists(select 1 from likes  where likes.postId = events.eventid and likes.userid = %s limit 1) as liked,COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count FROM events 
             INNER JOIN followings ON events.userid = followings.followingid 
             INNER JOIN users on post.userid = users.userid 
-            LEFT JOIN likes ON post.postid = likes.postid
+            LEFT JOIN likes ON events.eventid = likes.postid
             LEFT JOIN "comments" ON post.postid = "comments".postid
             WHERE followings.userid = %s AND CAST(events.starttimestamp as decimal) >= %s
             GROUP BY events.eventname, events.latitude,events.longitude,
