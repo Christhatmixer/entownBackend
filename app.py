@@ -556,9 +556,8 @@ def likePost():
     try:
         with dict_cur as cursor:
 
-            sql = "select post.postid,post.ismedia,post.photos,post.text,post.datecreated,post.userid, count(likedpost.postid) as numberoflikes from post left join likedpost on post.postid = likedpost.postid group by post.postid,post.ismedia,post.photos,post.text,post.datecreated,post.userid"
-
-            cursor.execute(sql, (data["userid"], data["postid"]))
+            sql = "INSERT INTO likes (postid,userid,type) VALUES (%s,%s,%s)"
+            cursor.execute(sql, (data["id"], data["userid"], "post"))
 
             print(cursor)
             connection.commit()
@@ -596,6 +595,17 @@ def likeEvent():
 
             connection.commit()
     finally:
+        header = {"Content-Type": "application/json; charset=utf-8",
+                  "Authorization": "Basic NGU5YzZmZmUtM2U2ZC00OTA1LWFkNzUtMWY4NGM1MjdjNzBl"}
+
+        payload = {"app_id": "e866c9f9-c862-4a1e-b605-b1a0820ca658",
+                   "include_external_user_ids": ["%s" % data["otheruserid"]],
+                   "contents": {"en": "%s liked your event." % data["username"]}
+                   }
+
+        req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
+
+        print(req.status_code, req.reason)
         connection.close()
     return "success"
 
