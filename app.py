@@ -111,7 +111,7 @@ def getEventFeed():
             events.city,events.country,events.state,events.userid,events.description,
             events.eventid,events.photos,events.company,events.datenum,events.endtime,
             events.starttime,events.address,events.starttimestamp,events.endtimestamp,
-            events.eventlink,events.geom,events.datecreated
+            events.eventlink,events.geom,events.datecreated,events.price
                 
             '''
 
