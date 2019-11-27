@@ -109,7 +109,7 @@ def getEventFeed():
             WHERE followings.userid = %s AND CAST(events.starttimestamp as decimal) >= %s
             GROUP BY events.eventname, events.latitude,events.longitude,
             events.city,events.country,events.state,events.userid,events.description,
-            events.eventid,events.photos,events.company,events.datenum,events.endttime,
+            events.eventid,events.photos,events.company,events.datenum,events.endtime,
             events.starttime,events.address,events.starttimestamp,events.endtimestamp,
             events.eventlink,events.geom,events.datecreated
                 
