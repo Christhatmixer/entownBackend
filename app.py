@@ -559,7 +559,7 @@ def likePost():
         with dict_cur as cursor:
 
             sql = "INSERT INTO likes (postid,userid,type) VALUES (%s,%s,%s)"
-            cursor.execute(sql, (data["id"], data["userid"], "post"))
+            cursor.execute(sql, (data["postid"], data["userid"], "post"))
 
             print(cursor)
             connection.commit()
