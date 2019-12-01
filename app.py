@@ -115,7 +115,7 @@ def getEventFeed():
                 
             '''
 
-            cursor.execute(sql, (data["userid"],data["userid"],data["userid"],currenttimestamp))
+            cursor.execute(sql, (data["userid"],data["userid"],currenttimestamp,data["userid"]))
 
             result = cursor.fetchall()
             print(result)
