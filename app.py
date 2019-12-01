@@ -106,7 +106,7 @@ def getEventFeed():
             INNER JOIN users on events.userid = users.userid 
             LEFT JOIN likes ON events.eventid = likes.postid
             LEFT JOIN "comments" ON events.eventid = "comments".postid
-            WHERE (followings.userid = %s AND CAST(events.starttimestamp as decimal) >= %s) OR users.userid = %s AND CAST(events.starttimestamp as decimal)
+            WHERE (followings.userid = %s AND CAST(events.starttimestamp as decimal) >= %s) OR users.userid = %s AND CAST(events.starttimestamp as decimal) >= %s
             GROUP BY events.eventname, events.latitude,events.longitude,
             events.city,events.country,events.state,events.userid,events.description,
             events.eventid,events.photos,events.company,events.datenum,events.endtime,
