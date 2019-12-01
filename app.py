@@ -106,7 +106,7 @@ def getEventFeed():
             INNER JOIN users on events.userid = users.userid 
             LEFT JOIN likes ON events.eventid = likes.postid
             LEFT JOIN "comments" ON events.eventid = "comments".postid
-            WHERE followings.userid = %s AND CAST(events.starttimestamp as decimal) >= %s
+            WHERE followings.userid = %s AND CAST(events.starttimestamp as decimal) >= %s AND users.userid = %s
             GROUP BY events.eventname, events.latitude,events.longitude,
             events.city,events.country,events.state,events.userid,events.description,
             events.eventid,events.photos,events.company,events.datenum,events.endtime,
@@ -115,7 +115,7 @@ def getEventFeed():
                 
             '''
 
-            cursor.execute(sql, (data["userid"],data["userid"],currenttimestamp))
+            cursor.execute(sql, (data["userid"],data["userid"],data["userid"],currenttimestamp))
 
             result = cursor.fetchall()
             print(result)
