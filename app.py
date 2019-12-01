@@ -139,12 +139,12 @@ def getPostFeed():
             LEFT JOIN "comments" ON post.postid = "comments".postid
             INNER JOIN followings ON post.userid = followings.followingid 
             INNER JOIN users on post.userid = users.userid 
-            WHERE followings.userid = %s
+            WHERE followings.userid = %s OR users.userid = %s
             GROUP BY post.userid,post.ismedia,post.text,post.postid,post.photos,
             post.tags,post.datecreated,post.geom
             '''
 
-            cursor.execute(sql, (data["userid"],data["userid"]))
+            cursor.execute(sql, (data["userid"],data["userid"],data["userid"]))
 
             result = cursor.fetchall()
             print(result)
