@@ -263,13 +263,12 @@ def getLikedUpcomingEvents():
 def getLikedEvents():
     data = request.json
     connection = psycopg2.connect(app.config["DATABASE_URL"])
-    currenttimestamp = float(data["currenttimestamp"])
 
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
             sql = "SELECT * FROM events INNER JOIN likes ON events.eventid = likes.postid WHERE likes.userid = %s "
-            cursor.execute(sql, (data["userid"],currenttimestamp))
+            cursor.execute(sql, (data["userid"]))
 
             result = cursor.fetchall()
             print(result)
