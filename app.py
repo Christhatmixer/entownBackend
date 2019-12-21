@@ -238,15 +238,19 @@ def getUserEvents():
     return jsonify(result)
 
 
-@app.route('/getSavedEvents', methods=['GET', 'POST'])
-def getSavedEvents():
+
+
+@app.route('/getLikedUpcomingEvents', methods=['GET', 'POST'])
+def getLikedUpcomingEvents():
     data = request.json
     connection = psycopg2.connect(app.config["DATABASE_URL"])
+    currenttimestamp = float(data["currenttimestamp"])
+
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM savedevents INNER JOIN events ON savedevents.eventid = events.eventid WHERE savedevents.userid = %s"
-            cursor.execute(sql, (data["userid"],))
+            sql = "SELECT * FROM events INNER JOIN likes ON events.eventid = likes.postid WHERE likes.userid = %s AND CAST(events.starttimestamp as decimal) >= %s)"
+            cursor.execute(sql, (data["userid"],currenttimestamp))
 
             result = cursor.fetchall()
             print(result)
@@ -255,6 +259,26 @@ def getSavedEvents():
     finally:
         connection.close()
     return jsonify(result)
+@app.route('/getLikedUpcomingEvents', methods=['GET', 'POST'])
+def getLikedUpcomingEvents():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    currenttimestamp = float(data["currenttimestamp"])
+
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM events INNER JOIN likes ON events.eventid = likes.postid WHERE likes.userid = %s "
+            cursor.execute(sql, (data["userid"],currenttimestamp))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
 
 @app.route('/getNearbyEvents', methods=['GET', 'POST'])
 def getNearbyEvents():
