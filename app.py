@@ -259,8 +259,8 @@ def getLikedUpcomingEvents():
     finally:
         connection.close()
     return jsonify(result)
-@app.route('/getLikedUpcomingEvents', methods=['GET', 'POST'])
-def getLikedUpcomingEvents():
+@app.route('/getLikedEvents', methods=['GET', 'POST'])
+def getLikedEvents():
     data = request.json
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     currenttimestamp = float(data["currenttimestamp"])
