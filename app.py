@@ -844,7 +844,24 @@ def searchUsers():
         connection.close()
     return jsonify(result)
 
+@app.route('/searchEvents', methods=['GET', 'POST'])
+def searchEvents():
+    data = request.json
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    currenttimestamp = float(data["currenttimestamp"])
 
+    try:
+        with dict_cur as cursor:
+            sql = "SELECT * FROM events WHERE eventName ILIKE %s LIMIT 10 AND CAST(events.starttimestamp as decimal) >= %s) "
+            print(sql)
+            cursor.execute(sql, (data["query"] + "%",currenttimestamp))
+            result = cursor.fetchall()
+            print(result)
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
 # MESSAGING
 
 @app.route('/generateChatKitToken', methods=['GET', 'POST'])
