@@ -853,7 +853,7 @@ def searchEvents():
 
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM events WHERE eventName ILIKE %s LIMIT 10 AND CAST(events.starttimestamp as decimal) >= %s"
+            sql = "SELECT * FROM events WHERE eventName ILIKE %s LIMIT 10 AND (CAST(events.starttimestamp as decimal) >= %s)"
             print(sql)
             cursor.execute(sql, (data["query"] + "%",currenttimestamp))
             result = cursor.fetchall()
