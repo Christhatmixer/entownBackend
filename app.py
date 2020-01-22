@@ -517,7 +517,9 @@ def newEvent():
 
     data = request.json
     print(data)
-
+    roomurl = uuid.uuid4().int
+    payload = {'channel_url': str(roomurl), 'name': data["eventname"]}
+    createChannel = requests.get("https://api-E0CD1AFB-F62E-4607-82E0-8F0A2E6F62F1.sendbird.com/v3/open_channels")
     extensionCur = connection.cursor(cursor_factory=LoggingCursor)
 
     try:
@@ -532,10 +534,10 @@ def newEvent():
             geom = "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)"
             updateGeom = "UPDATE events SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE events.eventid = %s"
 
-            sql = "INSERT INTO events (eventname,price,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO events (eventname,price,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,channelurl) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (data["eventname"],data["price"] ,data["description"], data["company"], data["eventlink"],data["userid"], data["eventid"],
                                  data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
-                                 data["latitude"], data["longitude"], data["address"]))
+                                 data["latitude"], data["longitude"], data["address"],str(roomurl)))
             cursor.execute(updateGeom, (data["eventid"],))
             print(cursor)
             connection.commit()
@@ -632,6 +634,28 @@ def likeEvent():
 
         print(req.status_code, req.reason)
         connection.close()
+    return "success"
+
+@app.route('/unlikeEvent', methods=['GET', 'POST'])
+def unlikePost():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    print(data)
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+    try:
+        with dict_cur as cursor:
+
+            sql = "DELETE FROM likes WHERE userid = %s and postid = %s"
+
+            cursor.execute(sql, (data["userid"], data["postid"]))
+
+            print(cursor)
+            connection.commit()
+    finally:
+        connection.close()
+
     return "success"
 
 @app.route('/unlikePost', methods=['GET', 'POST'])
