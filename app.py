@@ -637,7 +637,7 @@ def likeEvent():
     return "success"
 
 @app.route('/unlikeEvent', methods=['GET', 'POST'])
-def unlikePost():
+def unlikeEvent():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
     data = request.json
