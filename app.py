@@ -111,7 +111,7 @@ def getEventFeed():
             events.city,events.country,events.state,events.userid,events.description,
             events.eventid,events.photos,events.company,events.datenum,events.endtime,
             events.starttime,events.address,events.starttimestamp,events.endtimestamp,
-            events.eventlink,events.geom,events.datecreated,events.price
+            events.eventlink,events.geom,events.datecreated,events.price,events.channelurl
                 
             '''
 
@@ -225,7 +225,7 @@ def getUserEvents():
             GROUP BY events.eventid,events.userid,events.photos,
             events.datecreated,events.geom,events.longitude,events.latitude,events.eventname,events.city,events.company,
             events.starttime,events.endtime,events.eventlink,events.country,events.address,events.state,events.description,
-            events.datenum,events.starttimestamp,events.endtimestamp,events.price
+            events.datenum,events.starttimestamp,events.endtimestamp,events.price,events.channelurl
             '''
             cursor.execute(sql, (data["userID"],))
 
