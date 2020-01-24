@@ -520,7 +520,7 @@ def newEvent():
     roomurl = uuid.uuid4().int
     payload = {'channel_url': str(roomurl), 'name': data["eventname"]}
     createChannel = requests.post("https://api-E0CD1AFB-F62E-4607-82E0-8F0A2E6F62F1.sendbird.com/v3/open_channels")
-    print(createChannel.)
+    
     extensionCur = connection.cursor(cursor_factory=LoggingCursor)
 
     try:
