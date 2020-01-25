@@ -521,7 +521,7 @@ def newEvent():
     api_headers = {'Api-Token': '3c38215648b909be232dc1271a923bbbdd4df020'}
     payload = {'channel_url': str(roomurl), 'name': data["eventname"]}
     print(payload)
-    createChannel = requests.post("https://api-E0CD1AFB-F62E-4607-82E0-8F0A2E6F62F1.sendbird.com/v3/open_channels", json=payload,heades=api_headers)
+    createChannel = requests.post("https://api-E0CD1AFB-F62E-4607-82E0-8F0A2E6F62F1.sendbird.com/v3/open_channels", json=payload,headers=api_headers)
     print(createChannel.text)
 
     extensionCur = connection.cursor(cursor_factory=LoggingCursor)
