@@ -519,6 +519,7 @@ def newEvent():
     print(data)
     roomurl = uuid.uuid4().int
     payload = {'channel_url': str(roomurl), 'name': data["eventname"]}
+    print(payload)
     createChannel = requests.post("https://api-E0CD1AFB-F62E-4607-82E0-8F0A2E6F62F1.sendbird.com/v3/open_channels", data=payload)
     print(createChannel.text)
 
