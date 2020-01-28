@@ -862,9 +862,9 @@ def searchUsers():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM users WHERE userName ILIKE %s LIMIT 10"
+            sql = "SELECT users.*,exists(select 1 from followings where followings.userid = %s and followings.followingid = users.userid limit 1) as isfollowed FROM users WHERE userName ILIKE %s LIMIT 10"
             print(sql)
-            cursor.execute(sql, (data["query"] + "%",))
+            cursor.execute(sql, (data["userid"],data["query"] + "%"))
             result = cursor.fetchall()
             print(result)
             connection.commit()
