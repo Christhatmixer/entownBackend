@@ -158,7 +158,7 @@ def getPostFeed():
 @app.route('/getNearbyPost', methods=['GET', 'POST'])
 def getNearbyPost():
     data = request.json
-
+    currenttimestamp = float(data["currenttimestamp"])
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
@@ -282,12 +282,15 @@ def getLikedEvents():
 @app.route('/getNearbyEvents', methods=['GET', 'POST'])
 def getNearbyEvents():
     data = request.json
+    currenttimestamp = float(data["currenttimestamp"])
+    latitude = float(data["latitude"])
+    longitude = float(data["longitude"])
     connection = psycopg2.connect(app.config["DATABASE_URL"])
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM events WHERE ST_DWithin(geom, ST_MakePoint(%s,%s)::geography, %s);"
-            cursor.execute(sql, (data["longitude"],data["latitude"],data["radius"]))
+            sql = "SELECT * FROM events WHERE ST_DWithin(geom, ST_MakePoint(%s,%s)::geography, %s) AND CAST(events.starttimestamp as decimal) >= %s;"
+            cursor.execute(sql, (longitude,latitude,data["radius"],currenttimestamp))
 
             result = cursor.fetchall()
             print(result)
