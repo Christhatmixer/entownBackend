@@ -154,6 +154,29 @@ def getPostFeed():
         connection.close()
     return jsonify(result)
 
+@app.route('/getActivityFeed', methods=['GET', 'POST'])
+def getActivityFeed():
+    data = request.json
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = '''SELECT users.profileimageurl,users.userid,users.username,likes.postid,likes.type,comments.text 
+            FROM users,likes
+            WHERE
+            
+            '''
+
+            cursor.execute(sql, (data["userid"],data["userid"],data["userid"]))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
 
 @app.route('/getNearbyPost', methods=['GET', 'POST'])
 def getNearbyPost():
@@ -591,7 +614,10 @@ def likePost():
         with dict_cur as cursor:
 
             sql = "INSERT INTO likes (postid,userid,type) VALUES (%s,%s,%s)"
+            activitysql = "INSERT into activity (id,userid,action) VALUES (%s,%s,%s)"
             cursor.execute(sql, (data["postid"], data["userid"], "post"))
+            cursor.execute(activitysql,(data["postid"],data["userid"],"like"))
+            cursor.execute()
 
             print(cursor)
             connection.commit()
