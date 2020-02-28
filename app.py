@@ -162,9 +162,8 @@ def getActivityFeed():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT users.profileimageurl,users.userid,users.username,likes.postid,likes.type,comments.text 
-            FROM users,likes
-            WHERE
+            sql = '''SELECT activity.* from activity
+            INNER JOIN
             
             '''
 
