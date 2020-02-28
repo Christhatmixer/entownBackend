@@ -651,7 +651,11 @@ def likeEvent():
     try:
         with dict_cur as cursor:
             sql = "INSERT INTO likes (postid,userid,type) VALUES (%s,%s,%s)"
+            activitysql = "INSERT into activity (id,userid,action) VALUES (%s,%s,%s)"
+
             cursor.execute(sql, (data["id"], data["userid"], "event"))
+            cursor.execute(activitysql,(data["id"],data["userid"],"like"))
+
 
             connection.commit()
     finally:
@@ -681,8 +685,9 @@ def unlikeEvent():
         with dict_cur as cursor:
 
             sql = "DELETE FROM likes WHERE userid = %s and postid = %s"
-
+            activitysql = "DELETE FROM activity WHERE userid = %s and id = %s and action = %s"
             cursor.execute(sql, (data["userid"], data["postid"]))
+            cursor.execute(activitysql,(data["userid"],data["id"],"like"))
 
             print(cursor)
             connection.commit()
