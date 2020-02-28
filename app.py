@@ -708,8 +708,10 @@ def unlikePost():
         with dict_cur as cursor:
 
             sql = "DELETE FROM likes WHERE userid = %s and postid = %s"
+            activitysql = "DELETE FROM activity WHERE userid = %s and id = %s and action = %s"
 
             cursor.execute(sql, (data["userid"], data["postid"]))
+            cursor.execute(activitysql,(data["userid"],data["id"],"post"))
 
             print(cursor)
             connection.commit()
@@ -834,6 +836,8 @@ def postComment():
         try:
             with dict_cur as cursor:
                 sql = "INSERT INTO commentreplies (text,userid,postid,commentid,replyid) VALUES (%s,%s,%s,%s,%s)"
+                activitysql = "INSERT INTO activity (userid,id,action) VALUES (%s,%s,%s)"
+                cursor.execute(activitysql,(data["userid"],data["commentid"],"comment"))
                 cursor.execute(sql, (data["text"], data["userid"], data["id"], data["commentid"],data["replyid"]))
 
                 connection.commit()
@@ -855,6 +859,8 @@ def postComment():
         try:
             with dict_cur as cursor:
                 sql = "INSERT INTO comments (text,userid,postid,commentid) VALUES (%s,%s,%s,%s)"
+                activitysql = "INSERT INTO activity (userid,id,action) VALUES (%s,%s,%s)"
+                cursor.execute(activitysql, (data["userid"], data["commentid"], "comment"))
                 cursor.execute(sql, (data["text"], data["userid"], data["id"],data["commentid"]))
 
                 connection.commit()
@@ -1050,6 +1056,8 @@ def followUser():
         with connection.cursor() as cursor:
             sql = "INSERT INTO followings (userID, followingID) VALUES ('{userID}','{followingID}')".format(
                 userID=data["userID"], followingID=data["followingID"])
+            activitysql = "INSERT INTO activity (userid,id,action) VALUES (%s,%s,%s)"
+            cursor.execute(activitysql, (data["userID"], data["followingID"], "follow"))
             print(sql)
             cursor.execute(sql)
 
@@ -1079,6 +1087,9 @@ def unfollowUser():
         with connection.cursor() as cursor:
             sql = "DELETE FROM followings WHERE userID = '{userID}' AND followingID = '{followingID}'".format(
                 userID=data["userID"], followingID=data["followingID"])
+            activitysql = "DELETE FROM activity WHERE userid = %s AND followingid = %s"
+
+            cursor.execute(activitysql,(data["userID"],data["followingID"]))
             print(sql)
             cursor.execute(sql)
 
