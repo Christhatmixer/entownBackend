@@ -1086,7 +1086,7 @@ def unfollowUser():
         with connection.cursor() as cursor:
             sql = "DELETE FROM followings WHERE userID = '{userID}' AND followingID = '{followingID}'".format(
                 userID=data["userID"], followingID=data["followingID"])
-            activitysql = "DELETE FROM activity WHERE userid = %s AND followingid = %s"
+            activitysql = "DELETE FROM activity WHERE userid = %s AND followingID = %s"
 
             cursor.execute(activitysql,(data["userID"],data["followingID"]))
             print(sql)
