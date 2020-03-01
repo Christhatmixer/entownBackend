@@ -613,9 +613,9 @@ def likePost():
         with dict_cur as cursor:
 
             sql = "INSERT INTO likes (postid,userid,type) VALUES (%s,%s,%s)"
-            activitysql = "INSERT into activity (id,userid,action) VALUES (%s,%s,%s)"
-            cursor.execute(sql, (data["postid"], data["userid"], "post"))
-            cursor.execute(activitysql,(data["postid"],data["userid"],"like"))
+            activitysql = "INSERT into activity (id,userid,action,otheruserid) VALUES (%s,%s,%s,%s)"
+            cursor.execute(sql, (data["postid"], data["userid"], "post",data["otheruserid"]))
+            cursor.execute(activitysql,(data["postid"],data["userid"],"likepost"))
             cursor.execute()
 
             print(cursor)
@@ -650,10 +650,10 @@ def likeEvent():
     try:
         with dict_cur as cursor:
             sql = "INSERT INTO likes (postid,userid,type) VALUES (%s,%s,%s)"
-            activitysql = "INSERT into activity (id,userid,action) VALUES (%s,%s,%s)"
+            activitysql = "INSERT into activity (id,userid,action,otheruserid) VALUES (%s,%s,%s,%s)"
 
             cursor.execute(sql, (data["id"], data["userid"], "event"))
-            cursor.execute(activitysql,(data["id"],data["userid"],"like"))
+            cursor.execute(activitysql,(data["id"],data["userid"],"likeevent",data["otheruserid"]))
 
 
             connection.commit()
@@ -835,8 +835,8 @@ def postComment():
         try:
             with dict_cur as cursor:
                 sql = "INSERT INTO commentreplies (text,userid,postid,commentid,replyid) VALUES (%s,%s,%s,%s,%s)"
-                activitysql = "INSERT INTO activity (userid,id,action) VALUES (%s,%s,%s)"
-                cursor.execute(activitysql,(data["userid"],data["commentid"],"comment"))
+                activitysql = "INSERT INTO activity (userid,id,action,otheruserid) VALUES (%s,%s,%s,%s)"
+                cursor.execute(activitysql,(data["userid"],data["commentid"],"comment",data["otheruserid"]))
                 cursor.execute(sql, (data["text"], data["userid"], data["id"], data["commentid"],data["replyid"]))
 
                 connection.commit()
@@ -1055,8 +1055,8 @@ def followUser():
         with connection.cursor() as cursor:
             sql = "INSERT INTO followings (userID, followingID) VALUES ('{userID}','{followingID}')".format(
                 userID=data["userID"], followingID=data["followingID"])
-            activitysql = "INSERT INTO activity (userid,id,action) VALUES (%s,%s,%s)"
-            cursor.execute(activitysql, (data["userID"], data["followingID"], "follow"))
+            activitysql = "INSERT INTO activity (userid,id,action,otheruserid) VALUES (%s,%s,%s,%s)"
+            cursor.execute(activitysql, (data["userID"], data["followingID"], "follow",data["otheruserid"]))
             print(sql)
             cursor.execute(sql)
 
