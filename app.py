@@ -686,7 +686,7 @@ def unlikeEvent():
             sql = "DELETE FROM likes WHERE userid = %s and postid = %s"
             activitysql = "DELETE FROM activity WHERE userid = %s and id = %s and action = %s"
             cursor.execute(sql, (data["userid"], data["postid"]))
-            cursor.execute(activitysql,(data["userid"],data["id"],"like"))
+            cursor.execute(activitysql,(data["userid"],data["postid"],"like"))
 
             print(cursor)
             connection.commit()
@@ -710,7 +710,7 @@ def unlikePost():
             activitysql = "DELETE FROM activity WHERE userid = %s and id = %s and action = %s"
 
             cursor.execute(sql, (data["userid"], data["postid"]))
-            cursor.execute(activitysql,(data["userid"],data["id"],"post"))
+            cursor.execute(activitysql,(data["userid"],data["postid"],"post"))
 
             print(cursor)
             connection.commit()
