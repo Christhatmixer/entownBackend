@@ -101,7 +101,7 @@ def getEventFeed():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT events.*,exists(select 1 from likes  where likes.postId = events.eventid and likes.userid = %s limit 1) as liked,COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count FROM events 
+            sql = '''SELECT events.*,users.profileimageurl,exists(select 1 from likes  where likes.postId = events.eventid and likes.userid = %s limit 1) as liked,COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count FROM events 
             INNER JOIN followings ON events.userid = followings.followingid 
             INNER JOIN users on events.userid = users.userid 
             LEFT JOIN likes ON events.eventid = likes.postid
@@ -111,7 +111,7 @@ def getEventFeed():
             events.city,events.country,events.state,events.userid,events.description,
             events.eventid,events.photos,events.company,events.datenum,events.endtime,
             events.starttime,events.address,events.starttimestamp,events.endtimestamp,
-            events.eventlink,events.geom,events.datecreated,events.price,events.channelurl
+            events.eventlink,events.geom,events.datecreated,events.price,events.channelurl,users.profileimageurl
                 
             '''
 
