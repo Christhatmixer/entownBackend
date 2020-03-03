@@ -162,12 +162,18 @@ def getActivityFeed():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT activity.* from activity
-            INNER JOIN
+            sql = '''SELECT activity.*,post."text" as posttext,post.userid as posterid,"comments"."text" as commenttext,"comments".postid as postid,
+            users.userid as creatorid,users.username as username,followings.followingid from activity
+            left join post on post.postid = activity.id
+            left join "comments" on "comments".commentid = activity.id
+            left join commentreplies on commentreplies.replyid = "comments".commentid
+            left join followings on followings.userid = activity.id
+            left join users on users.userid = activity.userid
+            where activity.otheruserid = %s or activity.replyuserid = %s
             
             '''
 
-            cursor.execute(sql, (data["userid"],data["userid"],data["userid"]))
+            cursor.execute(sql, (data["userid"],data["userid"]))
 
             result = cursor.fetchall()
             print(result)
