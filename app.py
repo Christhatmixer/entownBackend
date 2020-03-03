@@ -835,8 +835,8 @@ def postComment():
         try:
             with dict_cur as cursor:
                 sql = "INSERT INTO commentreplies (text,userid,postid,commentid,replyid) VALUES (%s,%s,%s,%s,%s)"
-                activitysql = "INSERT INTO activity (userid,id,action,otheruserid) VALUES (%s,%s,%s,%s)"
-                cursor.execute(activitysql,(data["userid"],data["commentid"],"comment",data["otheruserid"]))
+                activitysql = "INSERT INTO activity (userid,id,action,otheruserid,replyuserid) VALUES (%s,%s,%s,%s,%s)"
+                cursor.execute(activitysql,(data["userid"],data["commentid"],"comment",data["otheruserid"],data["replyid"]))
                 cursor.execute(sql, (data["text"], data["userid"], data["id"], data["commentid"],data["replyid"]))
 
                 connection.commit()
@@ -858,8 +858,8 @@ def postComment():
         try:
             with dict_cur as cursor:
                 sql = "INSERT INTO comments (text,userid,postid,commentid) VALUES (%s,%s,%s,%s)"
-                activitysql = "INSERT INTO activity (userid,id,action) VALUES (%s,%s,%s)"
-                cursor.execute(activitysql, (data["userid"], data["commentid"], "comment"))
+                activitysql = "INSERT INTO activity (userid,id,action,otheruserid) VALUES (%s,%s,%s,%s)"
+                cursor.execute(activitysql, (data["userid"], data["commentid"], "comment",data["otheruserid"]))
                 cursor.execute(sql, (data["text"], data["userid"], data["id"],data["commentid"]))
 
                 connection.commit()
