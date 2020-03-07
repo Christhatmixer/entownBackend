@@ -133,7 +133,7 @@ def getPostFeed():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT post.*,exists(select 1 from likes  where likes.postId = post.postid and likes.userid = %s limit 1) as liked,COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count
+            sql = '''SELECT post.*,users.username,exists(select 1 from likes  where likes.postId = post.postid and likes.userid = %s limit 1) as liked,COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count
              FROM post 
             LEFT JOIN likes ON post.postid = likes.postid
             LEFT JOIN "comments" ON post.postid = "comments".postid
@@ -141,7 +141,7 @@ def getPostFeed():
             INNER JOIN users on post.userid = users.userid 
             WHERE followings.userid = %s OR users.userid = %s
             GROUP BY post.userid,post.ismedia,post.text,post.postid,post.photos,
-            post.tags,post.datecreated,post.geom
+            post.tags,post.datecreated,post.geom,users.username
             '''
 
             cursor.execute(sql, (data["userid"],data["userid"],data["userid"]))
