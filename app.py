@@ -526,7 +526,12 @@ def getUserInfo():
 
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM users WHERE userid = %s"
+            sql = '''
+            SELECT users.*,COUNT(followings.followingid) AS follower_count,COUNT(followings.userid) as following_count FROM users 
+            inner join followings on users.userid = followings.followingid
+            WHERE users.userid = 'qIoMXTjHiOMNA4wJgvAbv5v1Jhd2'group by users.bio,users.companyname,
+            users.devicetoken,users.email,users."name",users.profileimageurl,users.radius,users.userid,users.username
+            '''
 
             cursor.execute(sql, (data["userID"],))
             result = cursor.fetchone()
