@@ -796,12 +796,12 @@ def getComments():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT comments.*,users.username,COUNT(likes.postid) AS like_count,(select COUNT(*) from commentreplies cr where cr.replyid = comments.commentid ) as totalreplies,exists(select 1 from likes where likes.postid = comments.commentid and likes.userid = %s limit 1) as liked FROM comments 
+            sql = '''SELECT comments.*,users.username,users.profileimageurl,COUNT(likes.postid) AS like_count,(select COUNT(*) from commentreplies cr where cr.replyid = comments.commentid ) as totalreplies,exists(select 1 from likes where likes.postid = comments.commentid and likes.userid = %s limit 1) as liked FROM comments 
             LEFT JOIN likes ON comments.commentid = likes.postid
             LEFT JOIN commentreplies ON comments.commentid = commentreplies.replyid
             LEFT JOIN users ON comments.userid = users.userid
             WHERE comments.postid = %s
-            GROUP BY comments.postid,comments.text,comments.commentid,comments.datecreated,comments.userid,users.username
+            GROUP BY comments.postid,comments.text,comments.commentid,comments.datecreated,comments.userid,users.username,users.profileimageurl
             '''
             cursor.execute(sql, (data["userid"],data["postid"]))
 
