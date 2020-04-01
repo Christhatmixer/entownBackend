@@ -533,7 +533,7 @@ def getUserInfo():
             users.devicetoken,users.email,users."name",users.profileimageurl,users.radius,users.userid,users.username
             '''
 
-            cursor.execute(sql, (data["userID"],data["userid"]))
+            cursor.execute(sql, (data["userID"],data["userID"]))
             result = cursor.fetchone()
 
             print(result)
