@@ -523,26 +523,46 @@ def getUserInfo():
 
     data = request.json
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    if data.get("otheruserid") != None:
+        try:
+            with dict_cur as cursor:
+                sql = '''
+                SELECT users.*,COUNT(followings.followingid) AS follower_count,COUNT(followings.userid) as following_count,exists(select 1 from followings  where followings.userid = %s and followings.followingid = %s limit 1) as is_followed FROM users 
+                left join followings on users.userid = followings.userid
+                WHERE users.userid = %s group by users.bio,users.companyname,
+                users.devicetoken,users.email,users."name",users.profileimageurl,users.radius,users.userid,users.username
+                '''
 
-    try:
-        with dict_cur as cursor:
-            sql = '''
-            SELECT users.*,COUNT(followings.followingid) AS follower_count,COUNT(followings.userid) as following_count,exists(select 1 from followings  where followings.userid = %s and followings.followingid = users.userid limit 1) as is_followed FROM users 
-            left join followings on users.userid = followings.userid
-            WHERE users.userid = %s group by users.bio,users.companyname,
-            users.devicetoken,users.email,users."name",users.profileimageurl,users.radius,users.userid,users.username
-            '''
+                cursor.execute(sql, (data["userID"],data["otheruserid"],data["userID"]))
+                result = cursor.fetchone()
 
-            cursor.execute(sql, (data["userID"],data["userID"]))
-            result = cursor.fetchone()
+                print(result)
 
-            print(result)
+                connection.commit()
+        finally:
+            connection.close()
 
-            connection.commit()
-    finally:
-        connection.close()
+        return jsonify(result)
+    else:
+        try:
+            with dict_cur as cursor:
+                sql = '''
+                SELECT users.*,COUNT(followings.followingid) AS follower_count,COUNT(followings.userid) as following_count,exists(select 1 from followings  where followings.userid = %s and followings.followingid = users.userid limit 1) as is_followed FROM users 
+                left join followings on users.userid = followings.userid
+                WHERE users.userid = %s group by users.bio,users.companyname,
+                users.devicetoken,users.email,users."name",users.profileimageurl,users.radius,users.userid,users.username
+                '''
 
-    return jsonify(result)
+                cursor.execute(sql, (data["userID"], data["userID"]))
+                result = cursor.fetchone()
+
+                print(result)
+
+                connection.commit()
+        finally:
+            connection.close()
+
+        return jsonify(result)
 
 
 # EDIT AND ADD POST
