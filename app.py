@@ -528,7 +528,7 @@ def getUserInfo():
         with dict_cur as cursor:
             sql = '''
             SELECT users.*,COUNT(followings.followingid) AS follower_count,COUNT(followings.userid) as following_count,exists(select 1 from followings  where followings.userid = %s and followings.followingid = users.userid limit 1) as is_followed FROM users 
-            left join followings on users.userid = followings.followingid
+            left join followings on users.userid = followings.userid
             WHERE users.userid = %s group by users.bio,users.companyname,
             users.devicetoken,users.email,users."name",users.profileimageurl,users.radius,users.userid,users.username
             '''
