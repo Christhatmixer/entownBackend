@@ -267,7 +267,6 @@ def getUserEvents():
 
 
 
-
 @app.route('/getLikedUpcomingEvents', methods=['GET', 'POST'])
 def getLikedUpcomingEvents():
     data = request.json
@@ -287,6 +286,8 @@ def getLikedUpcomingEvents():
     finally:
         connection.close()
     return jsonify(result)
+
+
 @app.route('/getLikedEvents', methods=['GET', 'POST'])
 def getLikedEvents():
     data = request.json
@@ -431,13 +432,20 @@ def registerUser():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
     data = request.json
-
+    api_headers = {'Api-Token': '3c38215648b909be232dc1271a923bbbdd4df020'}
+    payload = {'user_id': data["userid"], 'nickname': data["username"]}
+    print(payload)
     chatkit.create_user(data["userid"], data["name"])
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO users (userid, email, name, username,profileimageurl,radius) VALUES (%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (
             data["userid"], data["email"], data["name"], data["username"], data["profileimageurl"], data["radius"]))
+
+            createUser = requests.post(
+                "https://api-E0CD1AFB-F62E-4607-82E0-8F0A2E6F62F1.sendbird.com/v3/users", json=payload,
+                headers=api_headers)
+            print(createUser.text)
 
             connection.commit()
     finally:
