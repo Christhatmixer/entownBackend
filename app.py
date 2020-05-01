@@ -704,10 +704,10 @@ def likeEvent():
                    "include_external_user_ids": ["%s" % data["otheruserid"]],
                    "contents": {"en": "%s liked your event." % data["username"]}
                    }
+        if data["userid"] != data["otheruserid"]:
+            req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
+            print(req.status_code, req.reason)
 
-        req = requests.post("https://onesignal.com/api/v1/notifications", headers=header, data=json.dumps(payload))
-
-        print(req.status_code, req.reason)
         connection.close()
     return "success"
 
