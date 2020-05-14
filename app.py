@@ -654,7 +654,7 @@ def likePost():
             sql = "INSERT INTO likes (postid,userid,type) VALUES (%s,%s,%s)"
             activitysql = "INSERT into activity (id,userid,action,otheruserid) VALUES (%s,%s,%s,%s)"
             cursor.execute(sql, (data["postid"], data["userid"], "post",data["otheruserid"]))
-            cursor.execute(activitysql,(data["postid"],data["userid"],"likepost"))
+            cursor.execute(activitysql,(data["postid"],data["userid"],"likepost",data["otheruserid"]))
 
 
             print(cursor)
