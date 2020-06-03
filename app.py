@@ -7,6 +7,7 @@ import logging
 import sys
 import json
 import requests
+import pyrebase
 from urllib.parse import urlparse
 from PushySDK import Pushy
 import os
@@ -51,6 +52,16 @@ chatkit = PusherChatKit(
     RequestsBackend
 )
 pushy=Pushy('2917b380f7d027b7659997a46e420c51c9eed6054e563f0180c5aa8181e24497')
+
+config = {
+  "apiKey": "AIzaSyCvlbW3bLRMj-TSgdwSniRfzR5DYreArx0",
+  "authDomain": "entown-2b315.firebaseapp.com",
+  "databaseURL": "https://databaseName.firebaseio.com",
+  "storageBucket": "entown-2b315.appspot.com",
+  "serviceAccount": "path/to/serviceAccountCredentials.json"
+}
+
+firebase = pyrebase.initialize_app(config)
 
 def haversine(lon1, lat1, lon2, lat2):
     """
@@ -524,6 +535,17 @@ def updateUser():
 
     return "success"
 
+@app.route('/postNewEvent', methods=['GET', 'POST'])
+def postNewEvent():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    print(data)
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    file = request.files["file"]
+    storage = firebase.storage()
+    path = "events/{eventid}".format(eventid=data["eventid"])
+    storage.child(path).put(file)
 
 @app.route('/getUserInfo', methods=['GET', 'POST'])
 def getUserInfo():
