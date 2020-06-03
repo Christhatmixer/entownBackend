@@ -57,8 +57,7 @@ config = {
   "apiKey": "AIzaSyCvlbW3bLRMj-TSgdwSniRfzR5DYreArx0",
   "authDomain": "entown-2b315.firebaseapp.com",
   "databaseURL": "https://databaseName.firebaseio.com",
-  "storageBucket": "entown-2b315.appspot.com",
-  "serviceAccount": "path/to/serviceAccountCredentials.json"
+  "storageBucket": "entown-2b315.appspot.com"
 }
 
 firebase = pyrebase.initialize_app(config)
