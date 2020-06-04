@@ -544,7 +544,9 @@ def postNewEvent():
     file = request.files["file"]
     storage = firebase.storage()
     path = "events/{eventid}".format(eventid=data["eventid"])
-    storage.child(path).put(file)
+    if data["uploads"] == 1:
+        storage.child(path).put(data["image1"])
+
 
 @app.route('/getUserInfo', methods=['GET', 'POST'])
 def getUserInfo():
@@ -628,6 +630,10 @@ def newEvent():
                                  data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
                                  data["latitude"], data["longitude"], data["address"],str(roomurl)))
             cursor.execute(updateGeom, (data["eventid"],))
+            storage = firebase.storage()
+            path = "events/{eventid}".format(eventid=data["eventid"])
+            if data["uploads"] == 1:
+                storage.child(path).put(data["image1"])
             print(cursor)
             connection.commit()
     finally:
