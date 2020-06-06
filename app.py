@@ -8,6 +8,7 @@ import sys
 import json
 import requests
 import pyrebase
+import cloudinary
 from urllib.parse import urlparse
 from PushySDK import Pushy
 import os
@@ -59,6 +60,11 @@ config = {
   "databaseURL": "https://databaseName.firebaseio.com",
   "storageBucket": "entown-2b315.appspot.com"
 }
+cloudinary.config(
+                cloud_name="dcgtg16q7",
+                api_key="697457983455948",
+                api_secret="OZx0rcQU4E43x67J5uK5V9sIXyw"
+            )
 
 firebase = pyrebase.initialize_app(config)
 
@@ -621,6 +627,8 @@ def newEvent():
             print(latitude)
             location = Point(longitude, latitude)
             print(location.x)
+            if data["uploads"] == 1:
+                req = cloudinary.uploader.upload(data["image1"],folder="entown/" + data["eventid"])
             locationTuple = '(%s,%s)' % (longitude,latitude)
             geom = "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)"
             updateGeom = "UPDATE events SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE events.eventid = %s"
@@ -630,10 +638,11 @@ def newEvent():
                                  data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
                                  data["latitude"], data["longitude"], data["address"],str(roomurl)))
             cursor.execute(updateGeom, (data["eventid"],))
+
             storage = firebase.storage()
             path = "events/{eventid}".format(eventid=data["eventid"])
-            if data["uploads"] == 1:
-                storage.child(path).put(data["image1"])
+
+
             print(cursor)
             connection.commit()
     finally:
