@@ -7,7 +7,7 @@ Flask == 1.0.2
 
 
 # app.py: 6
-requests == 2.18.4
+requests == 2.20.0
 Pyrebase == 3.0.27
 cloudinary == 1.21.0
 psycopg2 == 2.7.5
