@@ -630,7 +630,7 @@ def newEvent():
             location = Point(longitude, latitude)
             print(location.x)
             if data["uploads"] == 1:
-                req = cloudinary.uploader.upload(data["image1"],folder="entown/" + data["eventid"])
+                req = cloudinary.uploader.upload("data:image/png;base64," + data["image1"],folder="entown/" + data["eventid"])
             locationTuple = '(%s,%s)' % (longitude,latitude)
             geom = "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)"
             updateGeom = "UPDATE events SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE events.eventid = %s"
