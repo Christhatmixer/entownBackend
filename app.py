@@ -9,6 +9,8 @@ import json
 import requests
 import pyrebase
 import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 from urllib.parse import urlparse
 from PushySDK import Pushy
 import os
