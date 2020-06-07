@@ -611,7 +611,7 @@ def newEvent():
     connection = psycopg2.connect(app.config["DATABASE_URL"])
 
     data = request.json
-    print(data)
+    #print(data)
     roomurl = uuid.uuid4().int
     api_headers = {'Api-Token': '3c38215648b909be232dc1271a923bbbdd4df020'}
     payload = {'channel_url': str(roomurl), 'name': data["eventname"]}
