@@ -639,7 +639,7 @@ def newEvent():
                 sql = "INSERT INTO events (eventname,price,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,channelurl,photos) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 cursor.execute(sql, (data["eventname"],data["price"] ,data["description"], data["company"], data["eventlink"],data["userid"], data["eventid"],
                                      data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
-                                     data["latitude"], data["longitude"], data["address"],str(roomurl),[req["url"]]))
+                                     data["latitude"], data["longitude"], data["address"],str(roomurl),[req["secure_url"]]))
                 cursor.execute(updateGeom, (data["eventid"],))
 
 
