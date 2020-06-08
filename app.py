@@ -641,8 +641,7 @@ def newEvent():
                                  data["latitude"], data["longitude"], data["address"],str(roomurl),[req.build_url()]))
             cursor.execute(updateGeom, (data["eventid"],))
 
-            storage = firebase.storage()
-            path = "events/{eventid}".format(eventid=data["eventid"])
+            
 
 
             print(cursor)
