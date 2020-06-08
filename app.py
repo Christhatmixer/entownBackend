@@ -631,21 +631,22 @@ def newEvent():
             print(location.x)
             if data["uploads"] == 1:
                 req = cloudinary.uploader.upload("data:image/png;base64," + data["image1"],folder="entown/" + data["eventid"])
-            locationTuple = '(%s,%s)' % (longitude,latitude)
-            geom = "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)"
-            updateGeom = "UPDATE events SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE events.eventid = %s"
+                print(req)
+                locationTuple = '(%s,%s)' % (longitude,latitude)
+                geom = "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)"
+                updateGeom = "UPDATE events SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE events.eventid = %s"
 
-            sql = "INSERT INTO events (eventname,price,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,channelurl,photos) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (data["eventname"],data["price"] ,data["description"], data["company"], data["eventlink"],data["userid"], data["eventid"],
-                                 data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
-                                 data["latitude"], data["longitude"], data["address"],str(roomurl),[req.build_url()]))
-            cursor.execute(updateGeom, (data["eventid"],))
-
-            
+                sql = "INSERT INTO events (eventname,price,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,channelurl,photos) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                cursor.execute(sql, (data["eventname"],data["price"] ,data["description"], data["company"], data["eventlink"],data["userid"], data["eventid"],
+                                     data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
+                                     data["latitude"], data["longitude"], data["address"],str(roomurl),[req.build_url()]))
+                cursor.execute(updateGeom, (data["eventid"],))
 
 
-            print(cursor)
-            connection.commit()
+    
+
+                print(cursor)
+                connection.commit()
     finally:
         connection.close()
 
