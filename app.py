@@ -1198,9 +1198,9 @@ def getFollowersCount():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT COUNT(*) FROM followings WHERE followings.followingid = %s"
+            sql = "SELECT COUNT(*) FROM followings WHERE followings.followingid = %s AND followings.userid != %s"
             print(sql)
-            cursor.execute(sql, (data["userid"],))
+            cursor.execute(sql, (data["userid"],data["userid"]))
             result = cursor.fetchall()
 
             connection.commit()
