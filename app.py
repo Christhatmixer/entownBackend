@@ -1258,7 +1258,7 @@ def getSubscribers():
             WHERE followings.followingid = %s
             '''
             print(sql)
-            cursor.execute(sql, (data["otheruserid"],data["userid"],))
+            cursor.execute(sql, (data["userid"],data["otheruserid"],))
             result = cursor.fetchall()
 
             connection.commit()
