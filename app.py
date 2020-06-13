@@ -1254,11 +1254,11 @@ def getSubscribers():
     try:
         with dict_cur as cursor:
             sql = '''SELECT users.*,exists(select 1 from followings where followings.userid = %s and followings.followingid = users.userid limit 1) as isfollowed FROM users
-            INNER JOIN  followings ON users.userid = followings.followingid 
-            WHERE followings.followingid = %s
+            INNER JOIN  followings ON users.userid = followings.userid 
+            WHERE followings.followingid = %s and users.userid != %s
             '''
             print(sql)
-            cursor.execute(sql, (data["userid"],data["otheruserid"],))
+            cursor.execute(sql, (data["userid"],data["otheruserid"],data["otheruserid"]))
             result = cursor.fetchall()
 
             connection.commit()
