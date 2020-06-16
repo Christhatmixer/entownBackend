@@ -1279,7 +1279,7 @@ def getSubscribed():
             WHERE followings.userid = %s
             '''
             print(sql)
-            cursor.execute(sql, (data["userid"],data["userid"],))
+            cursor.execute(sql, (data["userid"],data["otheruserid"],))
             result = cursor.fetchall()
 
             connection.commit()
