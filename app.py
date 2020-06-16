@@ -1253,7 +1253,7 @@ def getSubscribers():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT users.*,exists(select 1 from followings where followings.followingid = %s and followings.userid = users.userid limit 1) as isfollowed FROM users
+            sql = '''SELECT users.*,exists(select 1 from followings where followings.userid = %s and followings.followingid = users.userid limit 1) as isfollowed FROM users
             INNER JOIN  followings ON users.userid = followings.userid 
             WHERE followings.followingid = %s and users.userid != %s
             '''
@@ -1274,7 +1274,7 @@ def getSubscribed():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT users.*,exists(select 1 from followings where followings.followingid = %s and followings.userid = users.userid limit 1) as isfollowed FROM users
+            sql = '''SELECT users.*,exists(select 1 from followings where followings.userid = %s and followings.followingid = users.userid limit 1) as isfollowed FROM users
             INNER JOIN  followings ON users.userid = followings.followingid 
             WHERE followings.userid = %s
             '''
