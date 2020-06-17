@@ -263,15 +263,16 @@ def getUserEvents():
     try:
         with dict_cur as cursor:
             sql = '''
-                        SELECT distinct events.*, COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count
+                        SELECT distinct events.*,users.profileimageurl ,COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count
             FROM events
                 LEFT JOIN likes ON events.eventid = likes.postid
                 LEFT JOIN "comments" ON events.eventid = "comments".postid
+                INNER JOIN users ON events.userid = users.userid
                 where events.userid = %s
             GROUP BY events.eventid,events.userid,events.photos,
             events.datecreated,events.geom,events.longitude,events.latitude,events.eventname,events.city,events.company,
             events.starttime,events.endtime,events.eventlink,events.country,events.address,events.state,events.description,
-            events.datenum,events.starttimestamp,events.endtimestamp,events.price,events.channelurl ORDER BY starttimestamp DESC
+            events.datenum,events.starttimestamp,events.endtimestamp,events.price,events.channelurl,users.profileimageurl ORDER BY starttimestamp DESC
             '''
             cursor.execute(sql, (data["userID"],))
 
