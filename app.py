@@ -648,6 +648,49 @@ def newEvent():
 
                 print(cursor)
                 connection.commit()
+            elif data["uploads"] == 2:
+                req = cloudinary.uploader.upload("data:image/png;base64," + data["image1"],
+                                                 folder="entown/" + data["eventid"])
+                req2 = cloudinary.uploader.upload("data:image/png;base64," + data["image2"],
+                                                 folder="entown/" + data["eventid"])
+                print(req)
+                locationTuple = '(%s,%s)' % (longitude, latitude)
+                geom = "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)"
+                updateGeom = "UPDATE events SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE events.eventid = %s"
+
+                sql = "INSERT INTO events (eventname,price,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,channelurl,photos) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                cursor.execute(sql, (
+                data["eventname"], data["price"], data["description"], data["company"], data["eventlink"],
+                data["userid"], data["eventid"],
+                data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
+                data["latitude"], data["longitude"], data["address"], str(roomurl), [req["secure_url"],req2["secure_url"]]))
+                cursor.execute(updateGeom, (data["eventid"],))
+
+                print(cursor)
+                connection.commit()
+            elif data["uploads"] == 3:
+                req = cloudinary.uploader.upload("data:image/png;base64," + data["image1"],
+                                                 folder="entown/" + data["eventid"])
+                req2 = cloudinary.uploader.upload("data:image/png;base64," + data["image2"],
+                                                  folder="entown/" + data["eventid"])
+                req3 = cloudinary.uploader.upload("data:image/png;base64," + data["image3"],
+                                                  folder="entown/" + data["eventid"])
+                print(req)
+                locationTuple = '(%s,%s)' % (longitude, latitude)
+                geom = "ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)"
+                updateGeom = "UPDATE events SET geom = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326) WHERE events.eventid = %s"
+
+                sql = "INSERT INTO events (eventname,price,description,company,eventlink,userid,eventid,starttimestamp,endtimestamp,endtime,starttime,latitude,longitude,address,channelurl,photos) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                cursor.execute(sql, (
+                    data["eventname"], data["price"], data["description"], data["company"], data["eventlink"],
+                    data["userid"], data["eventid"],
+                    data["starttimestamp"], data["endtimestamp"], data["endtime"], data["starttime"],
+                    data["latitude"], data["longitude"], data["address"], str(roomurl),
+                    [req["secure_url"], req2["secure_url"],req3["secure_url"]]))
+                cursor.execute(updateGeom, (data["eventid"],))
+
+                print(cursor)
+                connection.commit()
     finally:
         connection.close()
 
