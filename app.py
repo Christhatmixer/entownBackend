@@ -143,6 +143,39 @@ def getEventFeed():
         connection.close()
     return jsonify(result)
 
+
+@app.route('/getEvent', methods=['GET', 'POST'])
+def getEvent():
+    data = request.json
+    currenttimestamp = float(data["currenttimestamp"])
+
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+            sql = '''SELECT distinct events.*,users.profileimageurl ,COUNT(likes.postid) AS like_count,COUNT(comments.postid) AS comment_count
+            FROM events
+                LEFT JOIN likes ON events.eventid = likes.postid
+                LEFT JOIN "comments" ON events.eventid = "comments".postid
+                INNER JOIN users ON events.userid = users.userid
+                where events.eventid = %s
+            GROUP BY events.eventid,events.userid,events.photos,
+            events.datecreated,events.geom,events.longitude,events.latitude,events.eventname,events.city,events.company,
+            events.starttime,events.endtime,events.eventlink,events.country,events.address,events.state,events.description,
+            events.datenum,events.starttimestamp,events.endtimestamp,events.price,events.channelurl,users.profileimageurl 
+
+            '''
+
+            cursor.execute(sql, (data["eventid"],))
+
+            result = cursor.fetchall()
+            print(result)
+
+            connection.commit()
+    finally:
+        connection.close()
+    return jsonify(result)
+
 @app.route('/getPostFeed', methods=['GET', 'POST'])
 def getPostFeed():
     data = request.json
