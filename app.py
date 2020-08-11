@@ -328,7 +328,7 @@ def getLikedUpcomingEvents():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM events INNER JOIN likes ON events.eventid = likes.postid WHERE likes.userid = %s AND CAST(events.starttimestamp as decimal) >= %s)"
+            sql = "SELECT * FROM events INNER JOIN likes ON events.eventid = likes.postid WHERE likes.userid = %s AND CAST(events.starttimestamp as decimal) >= %s"
             cursor.execute(sql, (data["userid"],currenttimestamp))
 
             result = cursor.fetchall()
