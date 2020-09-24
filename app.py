@@ -348,7 +348,7 @@ def getLikedEvents():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT * FROM events INNER JOIN likes ON events.eventid = likes.postid WHERE likes.userid = %s "
+            sql = "SELECT distinct events.*,COUNT(likes.postid) AS like_count FROM events INNER JOIN likes ON events.eventid = likes.postid WHERE likes.userid = %s "
             cursor.execute(sql, (data["userid"],))
 
             result = cursor.fetchall()
