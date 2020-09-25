@@ -328,7 +328,9 @@ def getLikedUpcomingEvents():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = "SELECT distinct events.*,COUNT(likes.postid) AS like_count FROM events INNER JOIN likes ON events.eventid = likes.postid WHERE likes.userid = %s AND CAST(events.starttimestamp as decimal) >= %s"
+            sql = "SELECT distinct events.*,COUNT(likes.postid) AS like_count FROM events " \
+                  "INNER JOIN likes ON events.eventid = likes.postid " \
+                  "WHERE likes.userid = %s AND CAST(events.starttimestamp as decimal) >= %s"
             cursor.execute(sql, (data["userid"],currenttimestamp))
 
             result = cursor.fetchall()
@@ -348,7 +350,10 @@ def getLikedEvents():
     dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     try:
         with dict_cur as cursor:
-            sql = '''SELECT distinct events.*,COUNT(likes.postid) AS like_count FROM events INNER JOIN likes ON events.eventid = likes.postid WHERE likes.userid = %s 
+            sql = '''SELECT distinct events.*,COUNT(likes.postid) AS like_count FROM events 
+            INNER JOIN likes ON events.eventid = likes.postid 
+            INNER JOIN users ON events.userid = users.userid
+            WHERE likes.userid = %s 
             GROUP BY events.eventid,events.userid,events.photos,
             events.datecreated,events.geom,events.longitude,events.latitude,events.eventname,events.city,events.company,
             events.starttime,events.endtime,events.eventlink,events.country,events.address,events.state,events.description,
