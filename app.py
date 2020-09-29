@@ -214,7 +214,7 @@ def getActivityFeed():
     try:
         with dict_cur as cursor:
             sql = '''SELECT activity.*,post."text" as posttext,post.userid as posterid,"comments"."text" as commenttext,"comments".postid as postid,
-            users.userid as creatorid,users.username as username,users.profileimageurl,followings.followingid from activity
+            users.userid as creatorid,users.username as username,users.profileimageurl,events.eventid,followings.followingid from activity
             left join post on post.postid = activity.id
             left join "comments" on "comments".commentid = activity.id
             left join commentreplies on commentreplies.replyid = "comments".commentid
