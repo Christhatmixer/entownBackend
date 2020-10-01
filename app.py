@@ -220,6 +220,7 @@ def getActivityFeed():
             left join commentreplies on commentreplies.replyid = "comments".commentid
             left join followings on followings.userid = activity.id
             left join users on users.userid = activity.userid
+            left join events on events.eventid = activity.id
             where activity.otheruserid = %s or activity.replyuserid = %s
             
             '''
