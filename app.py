@@ -330,7 +330,7 @@ def getLikedUpcomingEvents():
     try:
         with dict_cur as cursor:
 
-            sql = '''"SELECT distinct events.*,COUNT(likes.postid) AS like_count FROM events 
+            sql = '''SELECT distinct events.*,COUNT(likes.postid) AS like_count FROM events 
                   INNER JOIN likes ON events.eventid = likes.postid 
                   
                   WHERE likes.userid = %s AND CAST(events.starttimestamp as decimal) >= %s
