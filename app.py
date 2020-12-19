@@ -494,6 +494,28 @@ def createEvent():
 
     return "success"
 
+@app.route('/deleteEvent', methods=['GET', 'POST'])
+def deleteEvent():
+    connection = psycopg2.connect(app.config["DATABASE_URL"])
+
+    data = request.json
+    dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    try:
+        with dict_cur as cursor:
+
+            sql =  "DELETE FROM events WHERE eventidid = %s"
+            cursor.execute(sql, data["eventid"],)
+
+            connection.commit()
+
+
+
+
+    finally:
+        connection.close()
+
+    return "success"
+
 
 # USER MANAGEMENT
 
