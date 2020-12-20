@@ -503,8 +503,8 @@ def deleteEvent():
     try:
         with dict_cur as cursor:
 
-            sql =  "DELETE FROM events WHERE eventid = %s"
-            cursor.execute(sql, data["eventid"],)
+            sql = "DELETE FROM events WHERE eventid = %s"
+            cursor.execute(sql, (data["eventid"],))
 
             connection.commit()
 
